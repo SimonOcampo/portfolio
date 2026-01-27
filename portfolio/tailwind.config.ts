@@ -9,18 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0a0a0a", // Deep charcoal, almost black
-        surface: "#121212", // Slightly lighter for cards
-        primary: "#3b82f6", // Electric Blue (Tech)
-        secondary: "#eab308", // UCF Gold/KnightHaven accent
+        background: "#0a0a0a",
+        surface: "#121212",
+        primary: "#3b82f6",
+        secondary: "#eab308",
         text: {
           main: "#ededed",
           muted: "#a1a1aa",
-        }
+        },
       },
       fontFamily: {
-        sans: ['var(--font-inter)'], // We will set this up next
-      }
+        sans: ["var(--font-geist-sans)"],
+        mono: ["var(--font-geist-mono)"],
+      },
     },
   },
   plugins: [],

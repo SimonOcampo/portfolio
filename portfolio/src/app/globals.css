@@ -1,13 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  background-color: #0a0a0a;
-  color: #ededed;
-}
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
 
 body {
+  @apply bg-background text-text-main;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
