@@ -11,7 +11,7 @@ const SKILL_CATEGORIES: Record<string, SkillCategory> = {
   Python: "Languages",
   Java: "Languages",
   C: "Languages",
-  C++: "Languages",
+  "C++": "Languages",
   JavaScript: "Languages",
   SQL: "Languages",
   PyTorch: "Frameworks",

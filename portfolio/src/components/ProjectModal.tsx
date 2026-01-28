@@ -1,10 +1,78 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { X, Github, ExternalLink } from "lucide-react";
+import { X, Github, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Project } from "@/data/projects";
 import { projectModal } from "@/data/site";
+import CinematicImage from "@/components/CinematicImage";
+
+interface ImageCarouselProps {
+  images: string[];
+  altPrefix: string;
+}
+
+function ImageCarousel({ images, altPrefix }: ImageCarouselProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const goNext = () => {
+    setCurrentIndex((i) => (i + 1) % images.length);
+  };
+  const goPrev = () => {
+    setCurrentIndex((i) => (i - 1 + images.length) % images.length);
+  };
+
+  if (!images.length) {
+    return (
+      <div className="aspect-video w-full bg-slate-600 rounded-t-2xl flex items-center justify-center">
+        <span className="text-white/50 text-sm">No image</span>
+      </div>
+    );
+  }
+
+  const showNav = images.length > 1;
+
+  return (
+    <div className="relative overflow-hidden rounded-t-2xl bg-white/5">
+      <CinematicImage
+        src={images[currentIndex]}
+        alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
+        className="rounded-none h-56 md:h-72"
+      />
+      {showNav && (
+        <>
+          <button
+            type="button"
+            onClick={goPrev}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 rounded-full p-2 bg-black/50 hover:bg-black/70 text-white transition-colors"
+            aria-label="Previous image"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button
+            type="button"
+            onClick={goNext}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 rounded-full p-2 bg-black/50 hover:bg-black/70 text-white transition-colors"
+            aria-label="Next image"
+          >
+            <ChevronRight size={24} />
+          </button>
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
+            {images.map((_, i) => (
+              <span
+                key={i}
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  i === currentIndex ? "bg-white" : "bg-white/40"
+                }`}
+                aria-hidden
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 interface ProjectModalProps {
   selectedProject: Project;
@@ -58,15 +126,12 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
           <X size={22} />
         </button>
 
-        {/* Cover image */}
-        <div className="aspect-video w-full overflow-hidden bg-white/5">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={selectedProject.image}
-            alt=""
-            className="h-full w-full object-cover"
-          />
-        </div>
+        {/* Image carousel */}
+        <ImageCarousel
+          key={selectedProject.id}
+          images={selectedProject.images ?? []}
+          altPrefix={selectedProject.title}
+        />
 
         <div className="p-8">
           <h2 className="text-2xl font-bold text-white">{selectedProject.title}</h2>

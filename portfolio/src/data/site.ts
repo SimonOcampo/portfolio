@@ -4,7 +4,7 @@
 
 export const hero = {
   name: "Simon Ocampo Millan",
-  subheadline: "Founder @ SimX AI · CS Student @ UCF",
+  subheadline: "Teaching Assistant @  UCF CECS · Computer Science @ UCF",
   ctaWork: "View Work",
   ctaResume: "Resume",
   ctaWorkHref: "#projects",
@@ -13,7 +13,7 @@ export const hero = {
 
 export const metadata = {
   title: "Simon Ocampo Millan | Portfolio",
-  description: "Founder @ SimX AI · CS Student @ UCF. Building intelligent systems and automation.",
+  description: "Teaching Assistant @  UCF CECS · Computer Science @ UCF",
 } as const;
 
 export const sectionTitles = {

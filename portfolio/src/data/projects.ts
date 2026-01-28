@@ -4,7 +4,7 @@ export interface Project {
   shortDesc: string;
   longDesc: string;
   technologies: string[];
-  image: string;
+  images: string[];
   githubUrl?: string;
   liveUrl?: string;
 }
@@ -13,37 +13,20 @@ export const projects: Project[] = [
   {
     id: "ai-document-assistant",
     title: "AI Document Assistant",
-    shortDesc: "RAG pipeline for technical docs with vector embeddings.",
+    shortDesc: "Production RAG system for grounded Q&A over PDFs up to 2000+ pages with hybrid retrieval.",
     longDesc:
-      "A retrieval-augmented generation system that ingests technical documentation, creates vector embeddings, and answers questions using semantic search. Built to improve developer onboarding and knowledge discovery in large codebases.",
-    technologies: ["Python", "OpenAI"],
-    image: "https://placehold.co/600x400",
+      "Built a production-grade RAG system enabling grounded Q&A over PDF documents up to 2000+ pages each. Implemented hybrid retrieval with dense embeddings, BM25 sparse search, and cross-encoder reranking. Added semantic chunking, alias-aware query expansion, and embedding caching to reduce latency by 35%. Deployed on Hugging Face Spaces using Streamlit with lazy model loading and secure secret management.",
+    technologies: ["Python", "RAG", "Hugging Face", "Streamlit"],
+    images: ["/projects/ai_rag.png"],
   },
   {
     id: "knighthaven-events",
-    title: "KnightHaven Events",
-    shortDesc: "Full-stack event platform for UCF students.",
+    title: "KnightHaven",
+    shortDesc: "Full-stack React + Express platform unifying UCF events, marketplace, and local discovery.",
     longDesc:
-      "An event management and discovery platform for the University of Central Florida community. Students can create, browse, and RSVP to campus events, with features for filtering, notifications, and organizer dashboards.",
-    technologies: ["LAMP", "PHP"],
-    image: "https://placehold.co/600x400",
+      "Built a full-stack platform with React, Express, and SQLite to unify events, marketplace listings, and local discovery. Implemented Auth0 verification to restrict protected features to users with verified @ucf.edu accounts. Developed a Flask scraper with BeautifulSoup to update campus events in real time with caching and fallback logic. Integrated the Yelp Fusion API for nearby spots, enabling restaurant and service discovery with student-focused context.",
+    technologies: ["React", "Express", "SQLite", "Auth0", "Flask", "Yelp Fusion API"],
+    images: ["/projects/khaven1.png", "/projects/khaven2.png", "/projects/khaven3.png", "/projects/khaven4.png"],
   },
-  {
-    id: "autonomous-robot",
-    title: "Autonomous Robot",
-    shortDesc: "ESP32-CAM chassis with obstacle avoidance.",
-    longDesc:
-      "An autonomous mobile robot built on an ESP32-CAM microcontroller. Implements ultrasonic and IR sensors for obstacle detection and uses custom pathfinding logic to navigate and avoid collisions in real time.",
-    technologies: ["C++", "IoT", "Hardware"],
-    image: "https://placehold.co/600x400",
-  },
-  {
-    id: "teaching-assistant",
-    title: "Teaching Assistant",
-    shortDesc: "Graph Algorithms & Systems Software mentorship.",
-    longDesc:
-      "Served as a teaching assistant for Graph Algorithms and Systems Software courses. Led lab sessions, held office hours, graded assignments, and helped students with topics including graph traversals, shortest paths, and C systems programming.",
-    technologies: ["Teaching", "Mentorship", "C"],
-    image: "https://placehold.co/600x400",
-  },
+  
 ];
