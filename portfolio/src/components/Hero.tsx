@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Download, Github, Linkedin } from "lucide-react";
 import TextScramble from "@/components/TextScramble";
-import { hero } from "@/data/site";
+import MagneticButton from "@/components/MagneticButton";
+import { hero, linkLabels } from "@/data/site";
 import { GITHUB_URL, LINKEDIN_URL } from "@/data/links";
 
 const container = {
@@ -48,14 +49,16 @@ export default function Hero() {
         >
           {hero.ctaWork} <ArrowRight size={20} />
         </a>
-        <a
-          href={hero.ctaResumeHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 border border-white/20 px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-white/10"
-        >
-          {hero.ctaResume} <Download size={20} />
-        </a>
+        <MagneticButton>
+          <a
+            href={hero.ctaResumeHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 border border-white/20 px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-white/10"
+          >
+            {hero.ctaResume} <Download size={20} />
+          </a>
+        </MagneticButton>
         <a
           href={GITHUB_URL}
           target="_blank"
@@ -70,7 +73,7 @@ export default function Hero() {
           rel="noopener noreferrer"
           className="flex items-center gap-2 border border-white/20 px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-white/10"
         >
-          LinkedIn <Linkedin size={20} />
+          {linkLabels.linkedin} <Linkedin size={20} />
         </a>
       </motion.div>
     </motion.section>

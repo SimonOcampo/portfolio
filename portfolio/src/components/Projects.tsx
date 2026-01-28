@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SpotlightCard from "@/components/SpotlightCard";
+import BorderBeam from "@/components/BorderBeam";
 import ProjectModal from "@/components/ProjectModal";
 import CinematicImage from "@/components/CinematicImage";
 import { projects } from "@/data/projects";
@@ -36,7 +37,8 @@ export default function Projects() {
             className={`${BENTO_SIZE[i] ?? "md:col-span-1"} cursor-pointer`}
             onClick={() => setSelectedId(project.id)}
           >
-            <SpotlightCard className="h-full p-8 rounded-2xl">
+            <SpotlightCard className="relative h-full overflow-hidden p-8 rounded-2xl">
+              <BorderBeam />
               <div className="aspect-video w-full overflow-hidden rounded-lg bg-white/5 relative mb-4">
                 {project.images?.[0] ? (
                   <CinematicImage

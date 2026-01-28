@@ -7,7 +7,7 @@ import { sectionTitles } from "@/data/site";
 
 export default function Involvement() {
   return (
-    <section className="px-6 py-24 max-w-7xl mx-auto">
+    <section id="involvement" className="px-6 py-24 max-w-7xl mx-auto">
       <motion.h2
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}

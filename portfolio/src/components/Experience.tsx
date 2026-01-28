@@ -14,7 +14,7 @@ export default function Experience() {
   const selected = experience[selectedIndex];
 
   return (
-    <section className={`${inter.className} px-6 py-24 max-w-7xl mx-auto`}>
+    <section id="experience" className={`${inter.className} px-6 py-24 max-w-7xl mx-auto`}>
       <motion.h2
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
