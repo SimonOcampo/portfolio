@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import TiltCard from "@/components/TiltCard";
 import SpotlightCard from "@/components/SpotlightCard";
 import ProjectModal from "@/components/ProjectModal";
 import CinematicImage from "@/components/CinematicImage";
@@ -36,7 +37,8 @@ export default function Projects() {
             className={`${BENTO_SIZE[i] ?? "md:col-span-1"} cursor-pointer`}
             onClick={() => setSelectedId(project.id)}
           >
-            <SpotlightCard className="h-full p-8 rounded-2xl">
+            <TiltCard className="h-full">
+              <SpotlightCard className="h-full p-8 rounded-2xl">
               <div className="aspect-video w-full overflow-hidden rounded-lg bg-white/5 relative mb-4">
                 {project.images?.[0] ? (
                   <CinematicImage
@@ -64,6 +66,7 @@ export default function Projects() {
                 ))}
               </div>
             </SpotlightCard>
+            </TiltCard>
           </motion.div>
         ))}
       </div>

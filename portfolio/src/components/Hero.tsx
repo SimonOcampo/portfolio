@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Download, Github, Linkedin } from "lucide-react";
 import TextScramble from "@/components/TextScramble";
+import TypewriterText from "@/components/TypewriterText";
+import GraphBackground from "@/components/GraphBackground";
 import { hero } from "@/data/site";
 import { GITHUB_URL, LINKEDIN_URL } from "@/data/links";
 
@@ -25,17 +27,28 @@ export default function Hero() {
       variants={container}
       initial="hidden"
       animate="show"
-      className="flex min-h-screen flex-col justify-center px-6 md:px-20 max-w-7xl mx-auto"
+      className="relative flex min-h-screen flex-col justify-center px-6 md:px-20 max-w-7xl mx-auto"
     >
+      {/* Interactive graph canvas behind Hero content */}
+      <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden>
+        <GraphBackground />
+      </div>
       <h1 className="text-5xl md:text-7xl font-bold text-white">
         <TextScramble text={hero.name} />
       </h1>
       <motion.h2
         variants={fadeIn}
         transition={{ duration: 0.4 }}
-        className="mt-4 text-xl md:text-2xl text-text-muted"
+        className="mt-4 text-xl md:text-2xl text-text-muted font-mono"
       >
-        {hero.subheadline}
+        <TypewriterText
+          words={[
+            "AI Engineer",
+            "Graph Algo TA",
+            "Full Stack Developer",
+            "System Architect",
+          ]}
+        />
       </motion.h2>
       <motion.div
         variants={fadeIn}
