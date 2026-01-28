@@ -14,10 +14,10 @@ export default function CinematicImage({ src, alt, className }: CinematicImagePr
   return (
     <div
       className={twMerge(
-        clsx("relative overflow-hidden rounded-xl h-64 md:h-80", className)
+        clsx("relative overflow-hidden rounded-xl w-full h-full", className)
       )}
     >
-      {/* Layer 1: Atmosphere — blurred background texture */}
+      {/* Layer 1: Atmosphere — blurred background texture (object-cover fills space) */}
       <Image
         src={src}
         alt=""
@@ -26,13 +26,14 @@ export default function CinematicImage({ src, alt, className }: CinematicImagePr
         className="object-cover blur-2xl scale-110 opacity-50"
         aria-hidden
       />
-      {/* Layer 2: Content — sharp image on top */}
+      {/* Layer 2: Content — sharp, full image (object-contain prevents crop/stretch) */}
       <Image
         src={src}
         alt={alt}
         fill
         sizes="(max-width: 768px) 100vw, 672px"
         className="object-contain z-10 drop-shadow-lg"
+        quality={100}
       />
     </div>
   );
