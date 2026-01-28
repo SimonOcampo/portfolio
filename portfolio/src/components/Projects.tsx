@@ -43,8 +43,10 @@ export default function Projects() {
                     src={project.images[0]}
                     alt=""
                     fill
-                    sizes="(max-width: 768px) 100vw, 400px"
+                    sizes="(max-width: 768px) 100vw, 600px"
                     className="object-cover"
+                    quality={100}
+                    unoptimized={project.id === "ai-document-assistant"}
                   />
                 ) : (
                   <div className="absolute inset-0 bg-slate-600" />

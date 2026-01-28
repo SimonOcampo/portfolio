@@ -18,6 +18,7 @@ export const projects: Project[] = [
       "Built a production-grade RAG system enabling grounded Q&A over PDF documents up to 2000+ pages each. Implemented hybrid retrieval with dense embeddings, BM25 sparse search, and cross-encoder reranking. Added semantic chunking, alias-aware query expansion, and embedding caching to reduce latency by 35%. Deployed on Hugging Face Spaces using Streamlit with lazy model loading and secure secret management.",
     technologies: ["Python", "RAG", "Hugging Face", "Streamlit"],
     images: ["/projects/ai_rag.png"],
+    liveUrl: "https://huggingface.co/spaces/SimonOcampoM/AIDocAssistant",
   },
   {
     id: "knighthaven-events",
