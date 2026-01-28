@@ -8,9 +8,10 @@ interface CinematicImageProps {
   src: string;
   alt: string;
   className?: string;
+  alignLeft?: boolean;
 }
 
-export default function CinematicImage({ src, alt, className }: CinematicImageProps) {
+export default function CinematicImage({ src, alt, className, alignLeft }: CinematicImageProps) {
   return (
     <div
       className={twMerge(
@@ -26,13 +27,14 @@ export default function CinematicImage({ src, alt, className }: CinematicImagePr
         className="object-cover blur-2xl scale-110 opacity-50"
         aria-hidden
       />
-      {/* Layer 2: Content — sharp, full image (object-contain prevents crop/stretch) */}
+      {/* Layer 2: Foreground — sharp, full image (z-10, not blurred) */}
       <Image
         src={src}
         alt={alt}
         fill
         sizes="(max-width: 768px) 100vw, 672px"
         className="object-contain z-10 drop-shadow-lg"
+        style={{ objectPosition: alignLeft ? "left center" : "center center" }}
         quality={100}
       />
     </div>

@@ -126,12 +126,22 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
           <X size={22} />
         </button>
 
-        {/* Image carousel */}
-        <ImageCarousel
-          key={selectedProject.id}
-          images={selectedProject.images ?? []}
-          altPrefix={selectedProject.title}
-        />
+        {/* Image area: wide diagram = horizontal scroll; else carousel */}
+        {selectedProject.isWide && selectedProject.images?.[0] ? (
+          <div className="w-full h-[500px] overflow-x-auto overflow-y-hidden rounded-xl border border-white/10 bg-neutral-900 flex items-center bg-grid-white/[0.05]">
+            <img
+              src={selectedProject.images[0]}
+              alt={selectedProject.title}
+              className="h-full w-auto max-w-none object-contain"
+            />
+          </div>
+        ) : (
+          <ImageCarousel
+            key={selectedProject.id}
+            images={selectedProject.images ?? []}
+            altPrefix={selectedProject.title}
+          />
+        )}
 
         <div className="p-8">
           <h2 className="text-2xl font-bold text-white">{selectedProject.title}</h2>
