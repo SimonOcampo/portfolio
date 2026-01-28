@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { experience } from "@/data/resume";
+import { sectionTitles } from "@/data/site";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,7 +21,7 @@ export default function Experience() {
         viewport={{ once: true }}
         className="mb-12 text-3xl font-bold text-white flex items-center gap-3"
       >
-        <span className="text-secondary">02.</span> Experience
+        <span className="text-secondary">{sectionTitles.experience.num}.</span> {sectionTitles.experience.title}
       </motion.h2>
 
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-12">

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import SpotlightCard from "@/components/SpotlightCard";
 import { involvement } from "@/data/resume";
+import { sectionTitles } from "@/data/site";
 
 export default function Involvement() {
   return (
@@ -13,7 +14,7 @@ export default function Involvement() {
         viewport={{ once: true }}
         className="mb-12 text-3xl font-bold text-white flex items-center gap-3"
       >
-        <span className="text-secondary">03.</span> Leadership & Involvement
+        <span className="text-secondary">{sectionTitles.involvement.num}.</span> {sectionTitles.involvement.title}
       </motion.h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { X, Github, ExternalLink } from "lucide-react";
 import type { Project } from "@/data/projects";
+import { projectModal } from "@/data/site";
 
 interface ProjectModalProps {
   selectedProject: Project;
@@ -91,7 +92,7 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
                 className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
               >
                 <Github size={18} />
-                View Code
+                {projectModal.viewCode}
               </a>
             )}
             {selectedProject.liveUrl && (
@@ -102,7 +103,7 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
                 className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
               >
                 <ExternalLink size={18} />
-                Live Demo
+                {projectModal.liveDemo}
               </a>
             )}
           </div>

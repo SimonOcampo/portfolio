@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import SpotlightCard from "@/components/SpotlightCard";
 import ProjectModal from "@/components/ProjectModal";
 import { projects } from "@/data/projects";
+import { sectionTitles } from "@/data/site";
 
 const BENTO_SIZE = ["md:col-span-2", "md:col-span-1", "md:col-span-1", "md:col-span-2"] as const;
 
@@ -20,7 +21,7 @@ export default function Projects() {
         viewport={{ once: true }}
         className="mb-12 text-3xl font-bold text-white flex items-center gap-3"
       >
-        <span className="text-primary">01.</span> Selected Projects
+        <span className="text-primary">{sectionTitles.projects.num}.</span> {sectionTitles.projects.title}
       </motion.h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

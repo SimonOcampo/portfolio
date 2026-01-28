@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
-const CHARS =
-  "!@#$%^&*()_+-=[]{}|;':\",./<>?`~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+// Uppercase letters, numbers, and symbols only
+const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;':\",./<>?`~";
 
-function randomChar() {
+const TICK_MS = 40;
+const DURATION_MS = 1500;
+
+function randomChar(): string {
   return CHARS[Math.floor(Math.random() * CHARS.length)];
 }
 
@@ -15,47 +18,41 @@ interface TextScrambleProps {
 }
 
 export default function TextScramble({ text, className = "" }: TextScrambleProps) {
-  const [display, setDisplay] = useState(text);
+  const [display, setDisplay] = useState(() =>
+    text.length > 0 ? Array.from({ length: text.length }, () => randomChar()).join("") : ""
+  );
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const run = useCallback(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
+  useEffect(() => {
     const len = text.length;
-    if (len === 0) return;
+    if (len === 0) {
+      setDisplay("");
+      return;
+    }
 
-    let resolved = 0;
-    let tick = 0;
-
-    setDisplay(Array(len).fill(0).map(() => randomChar()).join(""));
+    const start = Date.now();
 
     intervalRef.current = setInterval(() => {
-      tick++;
+      const elapsed = Date.now() - start;
+      const progress = Math.min(1, elapsed / DURATION_MS);
+      const resolved = Math.min(len, Math.floor(progress * len));
+
       const resolvedPart = text.slice(0, resolved);
-      const unresolvedPart = Array(len - resolved)
-        .fill(0)
-        .map(() => randomChar())
-        .join("");
+      const unresolvedPart = Array.from({ length: len - resolved }, () => randomChar()).join("");
       setDisplay(resolvedPart + unresolvedPart);
 
-      if (tick % 3 === 0 && resolved < len) resolved++;
       if (resolved >= len) {
         if (intervalRef.current) clearInterval(intervalRef.current);
         intervalRef.current = null;
         setDisplay(text);
       }
-    }, 35);
-  }, [text]);
+    }, TICK_MS);
 
-  useEffect(() => {
-    run();
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      intervalRef.current = null;
     };
-  }, [run]);
+  }, [text]);
 
-  return (
-    <span className={className} onMouseEnter={run}>
-      {display}
-    </span>
-  );
+  return <span className={className}>{display}</span>;
 }

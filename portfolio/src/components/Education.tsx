@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { education } from "@/data/resume";
+import { sectionTitles } from "@/data/site";
 
 type SkillCategory = "Languages" | "Frameworks" | "Tools";
 
@@ -50,7 +51,7 @@ export default function Education() {
         viewport={{ once: true }}
         className="mb-12 text-3xl font-bold text-white flex items-center gap-3"
       >
-        <span className="text-primary">04.</span> Education
+        <span className="text-primary">{sectionTitles.education.num}.</span> {sectionTitles.education.title}
       </motion.h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
