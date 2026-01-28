@@ -8,18 +8,30 @@ import { sectionTitles } from "@/data/site";
 type SkillCategory = "Languages" | "Frameworks" | "Tools";
 
 const SKILL_CATEGORIES: Record<string, SkillCategory> = {
-  Java: "Languages",
   Python: "Languages",
+  Java: "Languages",
+  C: "Languages",
+  C++: "Languages",
   JavaScript: "Languages",
+  SQL: "Languages",
+  PyTorch: "Frameworks",
+  NumPy: "Frameworks",
+  Pandas: "Frameworks",
+  Seaborn: "Frameworks",
+  PuLP: "Frameworks",
+  matplotlib: "Frameworks",
   React: "Frameworks",
+  "Node.js": "Frameworks",
   Express: "Frameworks",
   Flask: "Frameworks",
-  Streamlit: "Frameworks",
-  SQLite: "Tools",
-  Auth0: "Tools",
-  "Yelp Fusion API": "Tools",
-  RAG: "Tools",
-  "Hugging Face": "Tools",
+  "Git/GitHub": "Tools",
+  AWS: "Tools",
+  Docker: "Tools",
+  "REST APIs": "Tools",
+  "OpenAI APIs": "Tools",
+  GoHighLevel: "Tools",
+  Make: "Tools",
+  Odoo: "Tools",
 };
 
 const CATEGORY_ORDER: SkillCategory[] = ["Languages", "Frameworks", "Tools"];
