@@ -8,13 +8,13 @@ const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.12, delayChildren: 0.15 },
   },
 };
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+const fadeIn = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1 },
 };
 
 export default function Hero() {
@@ -26,22 +26,22 @@ export default function Hero() {
       className="flex min-h-screen flex-col justify-center px-6 md:px-20 max-w-7xl mx-auto"
     >
       <motion.h1
-        variants={item}
-        transition={{ duration: 0.5 }}
+        variants={fadeIn}
+        transition={{ duration: 0.4 }}
         className="text-5xl md:text-7xl font-bold text-white"
       >
         <TextScramble text="Simon Ocampo Millan" />
       </motion.h1>
       <motion.p
-        variants={item}
-        transition={{ duration: 0.5 }}
+        variants={fadeIn}
+        transition={{ duration: 0.4 }}
         className="mt-4 text-xl md:text-2xl text-text-muted"
       >
         Founder @ SimX AI · CS Student @ UCF
       </motion.p>
       <motion.div
-        variants={item}
-        transition={{ duration: 0.5 }}
+        variants={fadeIn}
+        transition={{ duration: 0.4 }}
         className="mt-10 flex gap-4"
       >
         <a
