@@ -113,7 +113,7 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
         initial={{ scale: 0.96 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.2 }}
-        className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl border border-white/10 bg-surface/95 shadow-2xl backdrop-blur-xl"
+        className="relative z-10 w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/10 bg-surface/95 shadow-2xl backdrop-blur-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close */}
@@ -128,7 +128,7 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
 
         {/* Image area: wide diagram = horizontal scroll; else carousel */}
         {selectedProject.isWide && selectedProject.images?.[0] ? (
-          <div className="w-full h-[500px] overflow-x-auto overflow-y-hidden rounded-xl border border-white/10 bg-neutral-900 flex items-center bg-grid-white/[0.05]">
+          <div className="w-full h-[400px] overflow-x-auto overflow-y-hidden rounded-xl border border-white/10 bg-neutral-900 flex items-center bg-grid-white/[0.05]">
             <img
               src={selectedProject.images[0]}
               alt={selectedProject.title}
