@@ -42,7 +42,6 @@ export default function Projects() {
                   <CinematicImage
                     src={project.images[0]}
                     alt={project.title}
-                    // Pass true only if the project is marked as wide (e.g. RAG diagram).
                     alignLeft={project.isWide}
                     className="rounded-none aspect-video"
                   />

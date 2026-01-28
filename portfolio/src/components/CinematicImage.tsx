@@ -11,32 +11,30 @@ interface CinematicImageProps {
   alignLeft?: boolean;
 }
 
-export default function CinematicImage({ src, alt, className, alignLeft = false }: CinematicImageProps) {
+export default function CinematicImage({ src, alt, className, alignLeft }: CinematicImageProps) {
+  const objectPosition = alignLeft ? "object-left" : "object-center";
   return (
     <div
       className={twMerge(
         clsx("relative overflow-hidden rounded-xl w-full h-full", className)
       )}
     >
-      {/* Background blur layer — always cover & center */}
+      {/* Layer 1: Atmosphere — blurred background texture (object-cover fills space) */}
       <Image
         src={src}
         alt=""
         fill
         sizes="(max-width: 768px) 100vw, 672px"
-        className="object-cover object-center blur-2xl scale-110 opacity-50"
+        className="object-cover blur-2xl scale-110 opacity-50"
         aria-hidden
       />
-      {/* Foreground clear layer — conditionally align */}
+      {/* Layer 2: Content — sharp, full image (object-contain prevents crop/stretch) */}
       <Image
         src={src}
         alt={alt}
         fill
         sizes="(max-width: 768px) 100vw, 672px"
-        className={clsx(
-          "object-contain z-10 drop-shadow-lg",
-          alignLeft ? "object-left" : "object-center"
-        )}
+        className={clsx("object-contain z-10 drop-shadow-lg", objectPosition)}
         quality={100}
       />
     </div>
