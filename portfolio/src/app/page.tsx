@@ -17,10 +17,10 @@ export default function Home() {
       {/* Content above background */}
       <div className="relative z-10 flex flex-col">
         <Hero />
-        <Experience />
         <Projects />
-        <Education />
+        <Experience />
         <Involvement />
+        <Education />
       </div>
     </main>
   );
