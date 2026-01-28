@@ -37,7 +37,7 @@ export default function Hero() {
         transition={{ duration: 0.5 }}
         className="mt-4 text-xl md:text-2xl text-text-muted"
       >
-        CS Student @ UCF | AI & Machine Learning Specialist
+        Founder @ SimX AI · CS Student @ UCF
       </motion.p>
       <motion.div
         variants={item}

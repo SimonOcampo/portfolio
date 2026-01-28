@@ -1,5 +1,8 @@
 import Hero from "@/components/Hero";
+import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
+import Education from "@/components/Education";
+import Involvement from "@/components/Involvement";
 
 export default function Home() {
   return (
@@ -12,10 +15,12 @@ export default function Home() {
       <div aria-hidden className="fixed inset-0 z-[-1] bg-grid-pattern" />
 
       {/* Content above background */}
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-col">
         <Hero />
+        <Experience />
         <Projects />
-        {/* Add Experience Component here later */}
+        <Education />
+        <Involvement />
       </div>
     </main>
   );
