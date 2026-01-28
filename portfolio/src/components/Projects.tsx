@@ -1,36 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import SpotlightCard from "@/components/SpotlightCard";
+import ProjectModal from "@/components/ProjectModal";
+import { projects } from "@/data/projects";
 
-const projects = [
-  {
-    title: "AI Document Assistant",
-    desc: "RAG pipeline for technical docs with vector embeddings.",
-    tags: ["Python", "OpenAI"],
-    size: "md:col-span-2",
-  },
-  {
-    title: "KnightHaven Events",
-    desc: "Full-stack event platform for UCF students.",
-    tags: ["LAMP", "PHP"],
-    size: "md:col-span-1",
-  },
-  {
-    title: "Autonomous Robot",
-    desc: "ESP32-CAM chassis with obstacle avoidance.",
-    tags: ["C++", "IoT", "Hardware"],
-    size: "md:col-span-1",
-  },
-  {
-    title: "Teaching Assistant",
-    desc: "Graph Algorithms & Systems Software mentorship.",
-    tags: ["Teaching", "Mentorship", "C"],
-    size: "md:col-span-2",
-  },
-];
+const BENTO_SIZE = ["md:col-span-2", "md:col-span-1", "md:col-span-1", "md:col-span-2"] as const;
 
 export default function Projects() {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedProject = projects.find((p) => p.id === selectedId);
+
   return (
     <section id="projects" className="px-6 py-24 max-w-7xl mx-auto">
       <motion.h2
@@ -45,20 +26,21 @@ export default function Projects() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {projects.map((project, i) => (
           <motion.div
-            key={project.title}
+            key={project.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className={project.size}
+            className={`${BENTO_SIZE[i] ?? "md:col-span-1"} cursor-pointer`}
+            onClick={() => setSelectedId(project.id)}
           >
             <SpotlightCard className="h-full p-8 rounded-2xl">
               <h3 className="text-2xl font-bold text-white mb-2">
                 {project.title}
               </h3>
-              <p className="text-text-muted mb-6">{project.desc}</p>
+              <p className="text-text-muted mb-6">{project.shortDesc}</p>
               <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
+                {project.technologies.map((tag) => (
                   <span
                     key={tag}
                     className="text-xs font-mono bg-white/5 text-white/80 px-2 py-1 rounded"
@@ -71,6 +53,16 @@ export default function Projects() {
           </motion.div>
         ))}
       </div>
+
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectModal
+            key={selectedProject.id}
+            selectedProject={selectedProject}
+            onClose={() => setSelectedId(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
