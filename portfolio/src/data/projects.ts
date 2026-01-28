@@ -7,7 +7,6 @@ export interface Project {
   images: string[];
   githubUrl?: string;
   liveUrl?: string;
-  isWide?: boolean;
 }
 
 export const projects: Project[] = [
@@ -20,7 +19,6 @@ export const projects: Project[] = [
     technologies: ["Python", "RAG", "Hugging Face", "Streamlit"],
     images: ["/projects/ai_rag.png"],
     liveUrl: "https://huggingface.co/spaces/SimonOcampoM/AIDocAssistant",
-    isWide: true,
   },
   {
     id: "knighthaven-events",

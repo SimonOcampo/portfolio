@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import SpotlightCard from "@/components/SpotlightCard";
 import ProjectModal from "@/components/ProjectModal";
-import CinematicImage from "@/components/CinematicImage";
 import { projects } from "@/data/projects";
 import { sectionTitles } from "@/data/site";
 
@@ -39,11 +39,14 @@ export default function Projects() {
             <SpotlightCard className="h-full p-8 rounded-2xl">
               <div className="aspect-video w-full overflow-hidden rounded-lg bg-white/5 relative mb-4">
                 {project.images?.[0] ? (
-                  <CinematicImage
+                  <Image
                     src={project.images[0]}
-                    alt={project.title}
-                    alignLeft={project.isWide}
-                    className="rounded-none aspect-video"
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 100vw, 600px"
+                    className="object-cover"
+                    quality={100}
+                    unoptimized={project.id === "ai-document-assistant"}
                   />
                 ) : (
                   <div className="absolute inset-0 bg-slate-600" />

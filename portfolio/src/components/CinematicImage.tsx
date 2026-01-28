@@ -8,11 +8,9 @@ interface CinematicImageProps {
   src: string;
   alt: string;
   className?: string;
-  alignLeft?: boolean;
 }
 
-export default function CinematicImage({ src, alt, className, alignLeft }: CinematicImageProps) {
-  const objectPosition = alignLeft ? "object-left" : "object-center";
+export default function CinematicImage({ src, alt, className }: CinematicImageProps) {
   return (
     <div
       className={twMerge(
@@ -34,7 +32,7 @@ export default function CinematicImage({ src, alt, className, alignLeft }: Cinem
         alt={alt}
         fill
         sizes="(max-width: 768px) 100vw, 672px"
-        className={clsx("object-contain z-10 drop-shadow-lg", objectPosition)}
+        className="object-contain object-left z-10 drop-shadow-lg"
         quality={100}
       />
     </div>
