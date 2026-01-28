@@ -6,7 +6,6 @@ import { X, Github, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react
 import type { Project } from "@/data/projects";
 import { projectModal } from "@/data/site";
 import CinematicImage from "@/components/CinematicImage";
-import PanZoomImage from "@/components/PanZoomImage";
 
 interface ImageCarouselProps {
   images: string[];
@@ -32,24 +31,14 @@ function ImageCarousel({ images, altPrefix }: ImageCarouselProps) {
   }
 
   const showNav = images.length > 1;
-  const currentImage = images[currentIndex];
-  const isWideDiagram = currentImage?.toLowerCase().includes('ai-rag') || 
-                        currentImage?.toLowerCase().includes('architecture');
 
   return (
     <div className="relative overflow-hidden rounded-t-2xl bg-white/5">
-      {isWideDiagram ? (
-        <PanZoomImage
-          src={currentImage}
-          alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
-        />
-      ) : (
-        <CinematicImage
-          src={currentImage}
-          alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
-          className="rounded-none h-56 md:h-72"
-        />
-      )}
+      <CinematicImage
+        src={images[currentIndex]}
+        alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
+        className="rounded-none h-56 md:h-72"
+      />
       {showNav && (
         <>
           <button

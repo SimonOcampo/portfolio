@@ -32,7 +32,7 @@ export default function CinematicImage({ src, alt, className }: CinematicImagePr
         alt={alt}
         fill
         sizes="(max-width: 768px) 100vw, 672px"
-        className="object-contain object-left z-10 drop-shadow-lg"
+        className="object-contain z-10 drop-shadow-lg"
         quality={100}
       />
     </div>
