@@ -77,26 +77,37 @@ export const education: Education = {
 
 export const experience: Experience[] = [
   {
-    company: "SimX AI",
-    title: "Founder",
-    startDate: "Jul 2025",
-    endDate: "Present",
-    bullets: [
-      "Architected scalable automation pipelines to streamline operations and reduce manual overhead.",
-      "Built context-aware conversational agents that improve customer engagement and support workflows.",
-      "Increased lead-to-appointment conversion by 25% through targeted automation and outreach.",
-      "Reduced manual processing latency by 70%+ with parallelized pipelines and intelligent routing.",
-    ],
-  },
-  {
-    company: "UCF",
-    title: "Teaching Assistant",
+    company: "UCF CECS",
+    title: "Teaching Assistant for Dr. Mahfuz Rahman",
     startDate: "Aug 2025",
     endDate: "Present",
     bullets: [
-      "Guided 100+ students through course material, labs, and assignments.",
-      "Debugged and explained complex Java programs during office hours and lab sessions.",
-      "Graded 100+ coding submissions with detailed feedback to support learning outcomes.",
+      "Guided 100+ students weekly in labs, reinforcing recursion, graph algorithms, and data structure implementation.",
+      "Debugged and explained complex Java programs during office hours, improving assignment completion and exam performance.",
+      "Graded 1000+ coding submissions for correctness, runtime optimization, and adherence to documentation standards.",
+    ],
+  },
+  {
+    company: "SimX AI",
+    title: "Founder",
+    startDate: "Jul 2025",
+    endDate: "Dec 2025",
+    bullets: [
+      "Architected scalable automation pipelines integrating OpenAI models with CRM systems at production scale.",
+      "Built context-aware conversational agents using prompt chaining to reduce hallucinations and improve accuracy.",
+      "Increased lead-to-appointment conversion by 25% through optimized AI-driven customer interactions.",
+      "Reduced manual processing latency by 70%+ via robust data orchestration and error-handling workflows.",
+    ],
+  },
+  {
+    company: "Vivint Smart Home",
+    title: "Sales Representative",
+    startDate: "May 2025",
+    endDate: "Jul 2025",
+    bullets: [
+      "Generated $60,000+ in revenue within two months by pitching tailored smart home solutions to residential clients.",
+      "Achieved a 40% close rate, consistently converting cold leads into signed contracts on the first interaction.",
+      "Supported community service by funding meals for 250 children through Vivint Gives Back",
     ],
   },
   {
@@ -105,9 +116,9 @@ export const experience: Experience[] = [
     startDate: "Dec 2024",
     endDate: "Jan 2025",
     bullets: [
-      "Automated legal compliance and contract review workflows to accelerate processing.",
-      "Standardized documentation workflows and improved clarity for internal and external use.",
-      "Supported daily operations and ad-hoc engineering tasks across the product stack.",
+      "Automated legal compliance by building reusable contract templates with dynamic placeholders in Odoo ERP.",
+      "Standardized documentation workflows across 30+ branches, reducing processing delays and compliance errors.",
+      "upported daily operations for 100+ staff by improving reliability of internal document and approval systems.",
     ],
   },
 ];
