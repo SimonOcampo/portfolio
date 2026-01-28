@@ -33,23 +33,14 @@ function ImageCarousel({ images, altPrefix }: ImageCarouselProps) {
 
   const showNav = images.length > 1;
   const currentImage = images[currentIndex];
-  const isWideDiagram = currentImage?.toLowerCase().includes('ai-rag') || 
-                        currentImage?.toLowerCase().includes('architecture');
 
   return (
     <div className="relative overflow-hidden rounded-t-2xl bg-white/5">
-      {isWideDiagram ? (
-        <PanZoomImage
-          src={currentImage}
-          alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
-        />
-      ) : (
-        <CinematicImage
-          src={currentImage}
-          alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
-          className="rounded-none h-56 md:h-72"
-        />
-      )}
+      <CinematicImage
+        src={currentImage}
+        alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
+        className="rounded-none h-56 md:h-72"
+      />
       {showNav && (
         <>
           <button
@@ -137,12 +128,19 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
           <X size={22} />
         </button>
 
-        {/* Image carousel */}
-        <ImageCarousel
-          key={selectedProject.id}
-          images={selectedProject.images ?? []}
-          altPrefix={selectedProject.title}
-        />
+        {/* Image area: wide diagram uses PanZoom, others use carousel */}
+        {selectedProject.isWide && selectedProject.images?.[0] ? (
+          <PanZoomImage
+            src={selectedProject.images[0]}
+            alt={`${selectedProject.title} — diagram`}
+          />
+        ) : (
+          <ImageCarousel
+            key={selectedProject.id}
+            images={selectedProject.images ?? []}
+            altPrefix={selectedProject.title}
+          />
+        )}
 
         <div className="p-8">
           <h2 className="text-2xl font-bold text-white">{selectedProject.title}</h2>
