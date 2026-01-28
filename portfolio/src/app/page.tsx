@@ -3,7 +3,6 @@ import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
 import Education from "@/components/Education";
 import Involvement from "@/components/Involvement";
-import FloatingDock from "@/components/FloatingDock";
 
 export default function Home() {
   return (
@@ -23,9 +22,6 @@ export default function Home() {
         <Involvement />
         <Education />
       </div>
-
-      {/* Floating dock: outside main scroll flow, fixed at bottom */}
-      <FloatingDock />
     </main>
   );
 }

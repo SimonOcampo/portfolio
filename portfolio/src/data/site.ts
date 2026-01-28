@@ -27,8 +27,3 @@ export const projectModal = {
   viewCode: "View Code",
   liveDemo: "Live Demo",
 } as const;
-
-export const linkLabels = {
-  github: "GitHub",
-  linkedin: "LinkedIn",
-} as const;

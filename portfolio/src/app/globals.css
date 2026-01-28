@@ -5,33 +5,6 @@ body {
   @apply bg-background text-text-main;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  position: relative;
-}
-
-/* Cinematic noise overlay: subtle film-grain texture */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  pointer-events: none;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-}
-
-/* Vignette: darken edges to draw focus to center */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    transparent 0%,
-    rgba(0, 0, 0, 0.4) 100%
-  );
 }
 
 /* Subtle grid pattern: white lines at 5% opacity, radial fade at edges */
