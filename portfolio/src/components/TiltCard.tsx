@@ -58,7 +58,7 @@ export default function TiltCard({ children, className = "" }: TiltCardProps) {
       onMouseLeave={handleMouseLeave}
     >
       <motion.div
-        className="relative w-full h-full"
+        className="relative w-full h-fit overflow-hidden rounded-2xl"
         style={{
           rotateX,
           rotateY,
@@ -68,7 +68,7 @@ export default function TiltCard({ children, className = "" }: TiltCardProps) {
         <div className="relative" style={{ transform: "translateZ(0)" }}>
           {children}
         </div>
-        {/* Glare / sheen overlay — moves opposite to tilt */}
+        {/* Glare / sheen overlay — absolute inset-0 covers the shrink-wrapped card */}
         <motion.div
           className="pointer-events-none absolute inset-0 rounded-2xl overflow-hidden"
           style={{
