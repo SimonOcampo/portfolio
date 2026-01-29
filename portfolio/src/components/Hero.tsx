@@ -43,10 +43,10 @@ export default function Hero() {
       >
         <TypewriterText
           words={[
-            "AI Engineer",
-            "Graph Algo TA",
+            "Graph Algorithms TA @ UCF CECS",
+            "Computer Science @ University of Central Florida",
+            "ML Engineer",
             "Full Stack Developer",
-            "System Architect",
           ]}
         />
       </motion.h2>
