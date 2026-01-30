@@ -29,6 +29,7 @@ export default function GraphBackground() {
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const rafRef = useRef<number>(0);
+  const isActiveRef = useRef(true);
   const [, setSize] = useState({ w: 0, h: 0 });
 
   const initParticles = useCallback((width: number, height: number) => {
@@ -84,11 +85,42 @@ export default function GraphBackground() {
       mouseRef.current = { x: -1000, y: -1000 };
     };
 
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        mouseRef.current = {
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY,
+        };
+      }
+    };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        mouseRef.current = {
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY,
+        };
+      }
+    };
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length === 0) {
+        mouseRef.current = { x: -1000, y: -1000 };
+      }
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, []);
 
@@ -99,75 +131,111 @@ export default function GraphBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const tick = () => {
-      const dpr = Math.min(window.devicePixelRatio ?? 1, 2);
-      const w = canvas.width / dpr;
-      const h = canvas.height / dpr;
-      const particles = particlesRef.current;
-      const mouse = mouseRef.current;
+    const startLoop = () => {
+      if (rafRef.current) return;
+      const tick = () => {
+        if (!isActiveRef.current) return;
+        const dpr = Math.min(window.devicePixelRatio ?? 1, 2);
+        const w = canvas.width / dpr;
+        const h = canvas.height / dpr;
+        const particles = particlesRef.current;
+        const mouse = mouseRef.current;
 
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, w, h);
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
 
-      // Mouse repulsion (mouse and particles in CSS pixels)
-      for (const p of particles) {
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < MOUSE_REPEL_RADIUS && dist > 0) {
-          const force =
-            (1 - dist / MOUSE_REPEL_RADIUS) * MOUSE_REPEL_STRENGTH;
-          const nx = dx / dist;
-          const ny = dy / dist;
-          p.vx += nx * force;
-          p.vy += ny * force;
-        }
-        p.vx += (p.baseX - p.x) * 0.002;
-        p.vy += (p.baseY - p.y) * 0.002;
-        p.vx *= DAMPING;
-        p.vy *= DAMPING;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.x = Math.max(0, Math.min(w, p.x));
-        p.y = Math.max(0, Math.min(h, p.y));
-      }
-
-      // Edges: lines between particles within CONNECT_DISTANCE
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i];
-          const b = particles[j];
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
+        for (const p of particles) {
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < CONNECT_DISTANCE) {
-            const alpha = 1 - dist / CONNECT_DISTANCE;
-            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.25})`;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
+          if (dist < MOUSE_REPEL_RADIUS && dist > 0) {
+            const force =
+              (1 - dist / MOUSE_REPEL_RADIUS) * MOUSE_REPEL_STRENGTH;
+            const nx = dx / dist;
+            const ny = dy / dist;
+            p.vx += nx * force;
+            p.vy += ny * force;
+          }
+          p.vx += (p.baseX - p.x) * 0.002;
+          p.vy += (p.baseY - p.y) * 0.002;
+          p.vx *= DAMPING;
+          p.vy *= DAMPING;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.x = Math.max(0, Math.min(w, p.x));
+          p.y = Math.max(0, Math.min(h, p.y));
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i];
+            const b = particles[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CONNECT_DISTANCE) {
+              const alpha = 1 - dist / CONNECT_DISTANCE;
+              ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.25})`;
+              ctx.lineWidth = 0.5;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
           }
         }
-      }
 
-      // Particles (nodes)
-      ctx.fillStyle = `rgba(255, 255, 255, ${PARTICLE_OPACITY})`;
-      for (const p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, PARTICLE_RADIUS, 0, Math.PI * 2);
-        ctx.fill();
-      }
+        ctx.fillStyle = `rgba(255, 255, 255, ${PARTICLE_OPACITY})`;
+        for (const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, PARTICLE_RADIUS, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
-      ctx.restore();
+        ctx.restore();
+        if (isActiveRef.current) {
+          rafRef.current = requestAnimationFrame(tick);
+        } else {
+          rafRef.current = 0;
+        }
+      };
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    rafRef.current = requestAnimationFrame(tick);
+    const updateActive = (inView: boolean, tabVisible: boolean) => {
+      const wasActive = isActiveRef.current;
+      isActiveRef.current = inView && tabVisible;
+      if (!wasActive && isActiveRef.current) startLoop();
+    };
+
+    const observeTarget = canvas.parentElement ?? canvas;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        updateActive(entry.isIntersecting, !document.hidden);
+      },
+      { threshold: 0, rootMargin: "0px" }
+    );
+    observer.observe(observeTarget);
+
+    const handleVisibility = () => {
+      const inView =
+        observeTarget.getBoundingClientRect().top < window.innerHeight &&
+        observeTarget.getBoundingClientRect().bottom > 0;
+      updateActive(inView, document.visibilityState === "visible");
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    isActiveRef.current = document.visibilityState === "visible";
+    startLoop();
+
     return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      observer.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
     };
   }, []);
 
