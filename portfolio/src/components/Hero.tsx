@@ -63,7 +63,6 @@ export default function Hero() {
         </a>
         <a
           href={hero.ctaResumeHref}
-          download="Resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 border border-white/20 px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-white/10"
