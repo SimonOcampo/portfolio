@@ -8,7 +8,7 @@ export const hero = {
   ctaWork: "View Work",
   ctaResume: "Resume",
   ctaWorkHref: "#projects",
-  ctaResumeHref: "/resume.pdf",
+  ctaResumeHref: "/Resume.pdf",
 } as const;
 
 export const metadata = {
