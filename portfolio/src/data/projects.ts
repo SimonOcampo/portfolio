@@ -33,7 +33,6 @@ export const projects: Project[] = [
       "/projects/aml-feature-importance.png",
     ],
     githubUrl: "https://github.com/SimonOcampo/bitcoin-laundering-gnn",
-    isWide: true,
     demoGif: "/projects/aml-demo.gif",
   },
   {
