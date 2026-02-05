@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import TiltCard from "@/components/TiltCard";
 import SpotlightCard from "@/components/SpotlightCard";
 import ProjectModal from "@/components/ProjectModal";
-import CinematicImage from "@/components/CinematicImage";
 import { projects } from "@/data/projects";
 import { sectionTitles } from "@/data/site";
 
@@ -37,18 +36,17 @@ export default function Projects() {
             className={`${BENTO_SIZE[i] ?? "md:col-span-1"} cursor-pointer`}
             onClick={() => setSelectedId(project.id)}
           >
-            <TiltCard className="h-full">
-              <SpotlightCard className="h-full p-8 rounded-2xl">
-              <div className="aspect-video w-full overflow-hidden rounded-lg bg-white/5 relative mb-4">
+            <TiltCard className="h-fit">
+              <SpotlightCard className="h-fit p-8 rounded-2xl">
+              <div className="w-full overflow-hidden rounded-lg bg-white/5 relative mb-4">
                 {project.images?.[0] ? (
-                  <CinematicImage
+                  <img
                     src={project.images[0]}
                     alt={project.title}
-                    alignLeft={project.isWide}
-                    className="rounded-none aspect-video"
+                    className={`w-full h-auto object-contain rounded-lg ${project.isWide ? "object-left" : "object-center"}`}
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-slate-600" />
+                  <div className="aspect-video bg-slate-600" />
                 )}
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
