@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { X, Github, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Project } from "@/data/projects";
 import { projectModal } from "@/data/site";
-import CinematicImage from "@/components/CinematicImage";
 
 interface ImageCarouselProps {
   images: string[];
@@ -34,11 +33,13 @@ function ImageCarousel({ images, altPrefix }: ImageCarouselProps) {
 
   return (
     <div className="relative overflow-hidden rounded-t-2xl bg-white/5">
-      <CinematicImage
-        src={images[currentIndex]}
-        alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
-        className="rounded-none h-56 md:h-72"
-      />
+      <div className="flex h-64 min-h-64 items-center justify-center bg-neutral-900/50 md:h-80 md:min-h-80">
+        <img
+          src={images[currentIndex]}
+          alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
+          className="max-h-full w-auto max-w-full object-contain"
+        />
+      </div>
       {showNav && (
         <>
           <button
