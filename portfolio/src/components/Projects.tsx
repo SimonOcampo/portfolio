@@ -45,10 +45,10 @@ export default function Projects() {
                     src={project.images[0]}
                     alt={project.title}
                     alignLeft={project.isWide}
-                    className="rounded-none"
+                    className="rounded-none h-64"
                   />
                 ) : (
-                  <div className="aspect-video bg-slate-600" />
+                  <div className="h-64 bg-slate-600" />
                 )}
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">

@@ -80,11 +80,12 @@ interface ProjectModalProps {
 }
 
 export default function ProjectModal({ selectedProject, onClose }: ProjectModalProps) {
-  const media = useMemo(
+  const mediaItems = useMemo(
     () =>
-      [selectedProject.demoGif, ...(selectedProject.images || [])].filter(
-        Boolean
-      ) as string[],
+      [
+        selectedProject.demoGif,
+        ...(selectedProject.images || []),
+      ].filter(Boolean) as string[],
     [selectedProject.demoGif, selectedProject.images]
   );
 
@@ -135,14 +136,14 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
         </button>
 
         {/* Image area: wide = filmstrip (demoGif + images); else carousel */}
-        {selectedProject.isWide && media.length > 0 ? (
-          <div className="w-full h-[500px] overflow-x-auto overflow-y-hidden rounded-xl border border-white/10 bg-neutral-900 flex flex-row gap-4 items-center px-4 bg-grid-white/[0.05]">
-            {media.map((item, index) => (
+        {selectedProject.isWide && mediaItems.length > 0 ? (
+          <div className="w-full h-[400px] overflow-x-auto overflow-y-hidden rounded-xl border border-white/10 bg-neutral-900 flex flex-row gap-4 items-center px-4 bg-grid-white/[0.05]">
+            {mediaItems.map((item, index) => (
               <img
                 key={`${item}-${index}`}
                 src={item}
                 alt={`${selectedProject.title} — media ${index + 1}`}
-                className="h-full w-auto max-w-none object-contain"
+                className="h-full w-auto max-w-none object-contain rounded-lg"
               />
             ))}
           </div>
