@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { X, Github, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Project } from "@/data/projects";
@@ -80,6 +80,17 @@ interface ProjectModalProps {
 }
 
 export default function ProjectModal({ selectedProject, onClose }: ProjectModalProps) {
+  const media = useMemo(
+    () =>
+      [selectedProject.demoGif, ...(selectedProject.images || [])].filter(
+        Boolean
+      ) as string[],
+    [selectedProject.demoGif, selectedProject.images]
+  );
+
+  const carouselImages =
+    selectedProject.isWide && media.length > 0 ? media : selectedProject.images ?? [];
+
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -126,22 +137,12 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
           <X size={22} />
         </button>
 
-        {/* Image area: wide diagram = horizontal scroll; else carousel */}
-        {selectedProject.isWide && (selectedProject.demoGif || selectedProject.images?.[0]) ? (
-          <div className="w-full h-[400px] overflow-x-auto overflow-y-hidden rounded-xl border border-white/10 bg-neutral-900 flex items-center bg-grid-white/[0.05]">
-            <img
-              src={selectedProject.demoGif || selectedProject.images?.[0] || ""}
-              alt={selectedProject.demoGif ? `${selectedProject.title} demo` : selectedProject.title}
-              className="h-full w-auto max-w-none object-contain"
-            />
-          </div>
-        ) : (
-          <ImageCarousel
-            key={selectedProject.id}
-            images={selectedProject.images ?? []}
-            altPrefix={selectedProject.title}
-          />
-        )}
+        {/* Image area: carousel (for wide projects includes demoGif + images) */}
+        <ImageCarousel
+          key={selectedProject.id}
+          images={carouselImages}
+          altPrefix={selectedProject.title}
+        />
 
         <div className="p-8">
           <h2 className="text-2xl font-bold text-white">{selectedProject.title}</h2>
