@@ -31,8 +31,7 @@ export const projects: Project[] = [
       "/projects/aml-tsne.png",
       "/projects/aml-feature-importance.png",
     ],
-    githubUrl: "https://github.com/yourusername/aml-graph-detection",
-    isWide: true,
+    githubUrl: "https://github.com/SimonOcampo/bitcoin-laundering-gnn",
   },
   {
     id: "ai-document-assistant",
@@ -43,6 +42,7 @@ export const projects: Project[] = [
     technologies: ["Python", "RAG", "Hugging Face", "Streamlit"],
     images: ["/projects/ai_rag.png"],
     liveUrl: "https://huggingface.co/spaces/SimonOcampoM/AIDocAssistant",
+    githubUrl: "https://github.com/SimonOcampo/AIDocAssistant",
     isWide: true,
   },
   {
@@ -53,6 +53,7 @@ export const projects: Project[] = [
       "Built a full-stack platform with React, Express, and SQLite to unify events, marketplace listings, and local discovery. Implemented Auth0 verification to restrict protected features to users with verified @ucf.edu accounts. Developed a Flask scraper with BeautifulSoup to update campus events in real time with caching and fallback logic. Integrated the Yelp Fusion API for nearby spots, enabling restaurant and service discovery with student-focused context.",
     technologies: ["React", "Express", "SQLite", "Auth0", "Flask", "Yelp Fusion API"],
     images: ["/projects/khaven1.png", "/projects/khaven2.png", "/projects/khaven3.png", "/projects/khaven4.png"],
+    githubUrl: "https://github.com/SimonOcampo/KnightHaven"
   },
   
 ];
