@@ -27,3 +27,15 @@ export const projectModal = {
   viewCode: "View Code",
   liveDemo: "Live Demo",
 } as const;
+
+export const linkLabels = {
+  github: "GitHub",
+  linkedin: "LinkedIn",
+} as const;
+
+export const typewriterWords = [
+  "Graph Algorithms TA @ UCF CECS",
+  "Computer Science @ University of Central Florida",
+  "ML Engineer",
+  "Full Stack Developer",
+] as const;

@@ -5,7 +5,7 @@ import { ArrowRight, Download, Github, Linkedin } from "lucide-react";
 import TextScramble from "@/components/TextScramble";
 import TypewriterText from "@/components/TypewriterText";
 import GraphBackground from "@/components/GraphBackground";
-import { hero } from "@/data/site";
+import { hero, linkLabels, typewriterWords } from "@/data/site";
 import { GITHUB_URL, LINKEDIN_URL } from "@/data/links";
 
 const container = {
@@ -41,14 +41,7 @@ export default function Hero() {
         transition={{ duration: 0.4 }}
         className="mt-4 text-xl md:text-2xl text-text-muted font-mono"
       >
-        <TypewriterText
-          words={[
-            "Graph Algorithms TA @ UCF CECS",
-            "Computer Science @ University of Central Florida",
-            "ML Engineer",
-            "Full Stack Developer",
-          ]}
-        />
+        <TypewriterText words={[...typewriterWords]} />
       </motion.h2>
       <motion.div
         variants={fadeIn}
@@ -83,7 +76,7 @@ export default function Hero() {
           rel="noopener noreferrer"
           className="flex items-center gap-2 border border-white/20 px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-white/10"
         >
-          LinkedIn <Linkedin size={20} />
+          {linkLabels.linkedin} <Linkedin size={20} />
         </a>
       </motion.div>
     </motion.section>
