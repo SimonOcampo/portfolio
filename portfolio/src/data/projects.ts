@@ -12,6 +12,29 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "aml-gnn-detection",
+    title: "AML Detection via Graph Neural Networks",
+    shortDesc:
+      "Inductive GraphSAGE pipeline to detect Bitcoin money laundering rings by analyzing 2-hop transaction topology on 200k+ nodes.",
+    longDesc:
+      "An inductive GraphSAGE pipeline engineered to detect Bitcoin money laundering rings by analyzing 2-hop transaction topology. Unlike traditional rules-based engines that view transactions in isolation, this model identifies 'structuring' and 'layering' patterns across 200k+ nodes in the Elliptic dataset. It handles extreme class imbalance (90% licit / 10% illicit) via Weighted Cross-Entropy Loss, achieving 67.2% Recall—effectively flagging 2/3rds of hidden illicit flows that standard models miss.",
+    technologies: [
+      "PyTorch Geometric",
+      "GraphSAGE",
+      "NetworkX",
+      "Python",
+      "Matplotlib",
+      "Pandas",
+    ],
+    images: [
+      "/projects/aml-network-graph.png",
+      "/projects/aml-tsne.png",
+      "/projects/aml-feature-importance.png",
+    ],
+    githubUrl: "https://github.com/yourusername/aml-graph-detection",
+    isWide: true,
+  },
+  {
     id: "ai-document-assistant",
     title: "AI Document Assistant",
     shortDesc: "Production RAG system for grounded Q&A over PDFs up to 2000+ pages with hybrid retrieval.",
