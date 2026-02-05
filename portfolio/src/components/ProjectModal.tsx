@@ -138,12 +138,23 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
           <X size={22} />
         </button>
 
-        {/* Image area: carousel (for wide projects includes demoGif + images) */}
-        <ImageCarousel
-          key={selectedProject.id}
-          images={carouselImages}
-          altPrefix={selectedProject.title}
-        />
+        {/* Image area: AIDocAssistant = horizontal scroller; others = carousel */}
+        {selectedProject.id === "ai-document-assistant" &&
+        selectedProject.images?.[0] ? (
+          <div className="w-full h-[500px] overflow-x-auto overflow-y-hidden rounded-t-2xl border-b border-white/10 bg-neutral-900 flex items-center bg-grid-white/[0.05]">
+            <img
+              src={selectedProject.images[0]}
+              alt={selectedProject.title}
+              className="h-full w-auto max-w-none object-contain"
+            />
+          </div>
+        ) : (
+          <ImageCarousel
+            key={selectedProject.id}
+            images={carouselImages}
+            altPrefix={selectedProject.title}
+          />
+        )}
 
         <div className="p-8">
           <h2 className="text-2xl font-bold text-white">{selectedProject.title}</h2>
