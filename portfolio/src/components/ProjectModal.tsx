@@ -127,11 +127,11 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
         </button>
 
         {/* Image area: wide diagram = horizontal scroll; else carousel */}
-        {selectedProject.isWide && selectedProject.images?.[0] ? (
+        {selectedProject.isWide && (selectedProject.demoGif || selectedProject.images?.[0]) ? (
           <div className="w-full h-[400px] overflow-x-auto overflow-y-hidden rounded-xl border border-white/10 bg-neutral-900 flex items-center bg-grid-white/[0.05]">
             <img
-              src={selectedProject.images[0]}
-              alt={selectedProject.title}
+              src={selectedProject.demoGif || selectedProject.images?.[0] || ""}
+              alt={selectedProject.demoGif ? `${selectedProject.title} demo` : selectedProject.title}
               className="h-full w-auto max-w-none object-contain"
             />
           </div>

@@ -8,6 +8,7 @@ export interface Project {
   githubUrl?: string;
   liveUrl?: string;
   isWide?: boolean;
+  demoGif?: string;
 }
 
 export const projects: Project[] = [
@@ -32,6 +33,8 @@ export const projects: Project[] = [
       "/projects/aml-feature-importance.png",
     ],
     githubUrl: "https://github.com/SimonOcampo/bitcoin-laundering-gnn",
+    isWide: true,
+    demoGif: "/projects/aml-demo.gif",
   },
   {
     id: "ai-document-assistant",
