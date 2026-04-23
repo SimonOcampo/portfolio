@@ -17,8 +17,20 @@ const container = {
 };
 
 const fadeIn = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1 },
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+};
+
+const floating = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: [0, -10, 0],
+    transition: {
+      opacity: { duration: 0.8 },
+      y: { repeat: Infinity, duration: 6 },
+    },
+  },
 };
 
 export default function Hero() {
@@ -33,12 +45,14 @@ export default function Hero() {
       <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden>
         <GraphBackground />
       </div>
-      <h1 className="text-5xl md:text-7xl font-bold text-white">
+      <motion.h1 
+        variants={floating}
+        className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary drop-shadow-[0_0_10px_rgba(0,210,255,0.3)] pb-2"
+      >
         <TextScramble text={hero.name} />
-      </h1>
+      </motion.h1>
       <motion.h2
-        variants={fadeIn}
-        transition={{ duration: 0.4 }}
+        variants={floating}
         className="mt-4 text-xl md:text-2xl text-text-muted font-mono"
       >
         <TypewriterText words={[...typewriterWords]} />
@@ -50,7 +64,7 @@ export default function Hero() {
       >
         <a
           href={hero.ctaWorkHref}
-          className="flex items-center gap-2 bg-primary px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-primary/90"
+          className="flex items-center gap-2 bg-primary px-6 py-3 rounded-lg font-medium text-[#030B14] transition-all hover:bg-primary/90 shadow-[0_0_15px_rgba(0,210,255,0.4)] hover:shadow-[0_0_25px_rgba(0,210,255,0.7)]"
         >
           {hero.ctaWork} <ArrowRight size={20} />
         </a>

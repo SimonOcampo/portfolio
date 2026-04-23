@@ -28,7 +28,7 @@ export default function SpotlightCard({ children, className }: SpotlightCardProp
       onMouseMove={handleMouseMove}
       className={twMerge(
         clsx(
-          "group relative overflow-hidden rounded-lg bg-surface border border-white/10",
+          "group relative overflow-hidden rounded-lg bg-surface/60 backdrop-blur-sm border border-primary/20 shadow-[0_4px_30px_rgba(0,210,255,0.05)]",
           className
         )
       )}
@@ -37,7 +37,7 @@ export default function SpotlightCard({ children, className }: SpotlightCardProp
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background:
-            "radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(59, 130, 246, 0.12) 0%, transparent 50%)",
+            "radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 210, 255, 0.15) 0%, transparent 50%)",
         }}
       />
       <div className="relative z-10">{children}</div>

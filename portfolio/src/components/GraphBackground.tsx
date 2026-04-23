@@ -2,22 +2,30 @@
 
 import { useEffect, useRef, useCallback, useState } from "react";
 
-const PARTICLE_COUNT_MIN = 50;
-const PARTICLE_COUNT_MAX = 80;
-const CONNECT_DISTANCE = 100;
-const MOUSE_REPEL_RADIUS = 120;
-const MOUSE_REPEL_STRENGTH = 0.08;
-const PARTICLE_RADIUS = 1.5;
-const PARTICLE_OPACITY = 0.5;
-const DAMPING = 0.92;
+const POKEMON_SPRITES = [
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/131.gif", // Lapras
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/245.gif", // Suicune
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/350.gif", // Milotic
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/134.gif", // Vaporeon
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/382.gif", // Kyogre
+];
+
+const PARTICLE_COUNT = 15;
+const MOUSE_REPEL_RADIUS = 150;
+const MOUSE_REPEL_STRENGTH = 0.05;
+const DAMPING = 0.95;
 
 interface Particle {
+  id: number;
   x: number;
   y: number;
   vx: number;
   vy: number;
   baseX: number;
   baseY: number;
+  spriteIndex: number;
+  size: number;
+  opacity: number;
 }
 
 function randomBetween(min: number, max: number) {
@@ -25,59 +33,44 @@ function randomBetween(min: number, max: number) {
 }
 
 export default function GraphBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const rafRef = useRef<number>(0);
   const isActiveRef = useRef(true);
-  const [, setSize] = useState({ w: 0, h: 0 });
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   const initParticles = useCallback((width: number, height: number) => {
-    const count = Math.floor(
-      randomBetween(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1)
-    );
-    const particles: Particle[] = [];
-    for (let i = 0; i < count; i++) {
-      particles.push({
+    const initialParticles: Particle[] = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const pSize = randomBetween(40, 80);
+      initialParticles.push({
+        id: i,
         x: randomBetween(0, width),
-        y: randomBetween(0, height),
-        vx: 0,
-        vy: 0,
+        y: randomBetween(height, height + 500), // Start from bottom
+        vx: randomBetween(-0.5, 0.5),
+        vy: randomBetween(-1.5, -0.5), // Drift upwards
         baseX: 0,
         baseY: 0,
+        spriteIndex: Math.floor(Math.random() * POKEMON_SPRITES.length),
+        size: pSize,
+        opacity: randomBetween(0.4, 0.8),
       });
     }
-    particles.forEach((p) => {
-      p.baseX = p.x;
-      p.baseY = p.y;
-    });
-    particlesRef.current = particles;
+    particlesRef.current = initialParticles;
+    setParticles([...initialParticles]);
   }, []);
 
-  const resize = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const dpr = Math.min(window.devicePixelRatio ?? 1, 2);
+  useEffect(() => {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-    setSize({ w, h });
     initParticles(w, h);
+    
+    // We don't need to reinit on resize, just let them float.
   }, [initParticles]);
 
   useEffect(() => {
-    resize();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
-  }, [resize]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     };
@@ -85,166 +78,119 @@ export default function GraphBackground() {
       mouseRef.current = { x: -1000, y: -1000 };
     };
 
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        mouseRef.current = {
-          x: e.touches[0].clientX,
-          y: e.touches[0].clientY,
-        };
-      }
-    };
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        mouseRef.current = {
-          x: e.touches[0].clientX,
-          y: e.touches[0].clientY,
-        };
-      }
-    };
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (e.touches.length === 0) {
-        mouseRef.current = { x: -1000, y: -1000 };
-      }
-    };
-
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseleave", handleMouseLeave);
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
-    window.addEventListener("touchend", handleTouchEnd, { passive: true });
-    window.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
-      window.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, []);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
     const startLoop = () => {
       if (rafRef.current) return;
+      
       const tick = () => {
         if (!isActiveRef.current) return;
-        const dpr = Math.min(window.devicePixelRatio ?? 1, 2);
-        const w = canvas.width / dpr;
-        const h = canvas.height / dpr;
-        const particles = particlesRef.current;
+        
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const pts = particlesRef.current;
         const mouse = mouseRef.current;
 
-        ctx.save();
-        ctx.scale(dpr, dpr);
-        ctx.clearRect(0, 0, w, h);
-
-        for (const p of particles) {
+        for (let i = 0; i < pts.length; i++) {
+          const p = pts[i];
           const dx = p.x - mouse.x;
           const dy = p.y - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
+          
           if (dist < MOUSE_REPEL_RADIUS && dist > 0) {
-            const force =
-              (1 - dist / MOUSE_REPEL_RADIUS) * MOUSE_REPEL_STRENGTH;
+            const force = (1 - dist / MOUSE_REPEL_RADIUS) * MOUSE_REPEL_STRENGTH;
             const nx = dx / dist;
             const ny = dy / dist;
-            p.vx += nx * force;
-            p.vy += ny * force;
+            p.vx += nx * force * 5;
+            p.vy += ny * force * 5;
           }
-          p.vx += (p.baseX - p.x) * 0.002;
-          p.vy += (p.baseY - p.y) * 0.002;
+          
+          // Gentle upward drift + wobble
+          p.vy -= 0.01; 
+          p.vx += Math.sin(Date.now() / 1000 + p.id) * 0.02;
+          
           p.vx *= DAMPING;
           p.vy *= DAMPING;
+          
           p.x += p.vx;
           p.y += p.vy;
-          p.x = Math.max(0, Math.min(w, p.x));
-          p.y = Math.max(0, Math.min(h, p.y));
-        }
 
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const a = particles[i];
-            const b = particles[j];
-            const dx = b.x - a.x;
-            const dy = b.y - a.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < CONNECT_DISTANCE) {
-              const alpha = 1 - dist / CONNECT_DISTANCE;
-              ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.25})`;
-              ctx.lineWidth = 0.5;
-              ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(b.x, b.y);
-              ctx.stroke();
-            }
+          // Wrap around screen
+          if (p.y < -100) {
+              p.y = h + 100;
+              p.x = randomBetween(0, w);
+              p.vy = randomBetween(-1.5, -0.5);
+          }
+          if (p.x < -100) p.x = w + 100;
+          if (p.x > w + 100) p.x = -100;
+
+          // Apply transform directly to DOM nodes for max performance without React state re-renders
+          const imgEl = imageRefs.current[p.id];
+          if (imgEl) {
+              imgEl.style.transform = `translate3d(${p.x}px, ${p.y}px, 0)`;
           }
         }
 
-        ctx.fillStyle = `rgba(255, 255, 255, ${PARTICLE_OPACITY})`;
-        for (const p of particles) {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, PARTICLE_RADIUS, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        ctx.restore();
         if (isActiveRef.current) {
           rafRef.current = requestAnimationFrame(tick);
         } else {
           rafRef.current = 0;
         }
       };
+      
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    const updateActive = (inView: boolean, tabVisible: boolean) => {
-      const wasActive = isActiveRef.current;
-      isActiveRef.current = inView && tabVisible;
-      if (!wasActive && isActiveRef.current) startLoop();
-    };
-
-    const observeTarget = canvas.parentElement ?? canvas;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry) return;
-        updateActive(entry.isIntersecting, !document.hidden);
-      },
-      { threshold: 0, rootMargin: "0px" }
-    );
-    observer.observe(observeTarget);
-
     const handleVisibility = () => {
-      const inView =
-        observeTarget.getBoundingClientRect().top < window.innerHeight &&
-        observeTarget.getBoundingClientRect().bottom > 0;
-      updateActive(inView, document.visibilityState === "visible");
+      isActiveRef.current = document.visibilityState === "visible";
+      if (isActiveRef.current && particlesRef.current.length > 0) {
+          startLoop();
+      }
     };
+    
     document.addEventListener("visibilitychange", handleVisibility);
-
-    isActiveRef.current = document.visibilityState === "visible";
-    startLoop();
+    if (particlesRef.current.length > 0) {
+       startLoop();
+    }
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);
-      observer.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
     };
-  }, []);
+  }, [particles]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 z-0 block"
-      style={{ background: "transparent" }}
+    <div
+      ref={containerRef}
+      className="fixed inset-0 z-0 overflow-hidden pointer-events-none"
       aria-hidden
-    />
+    >
+      {particles.map((p, i) => (
+        <img
+          key={p.id}
+          ref={(el) => {
+            imageRefs.current[p.id] = el;
+          }}
+          src={POKEMON_SPRITES[p.spriteIndex]}
+          alt=""
+          className="absolute top-0 left-0"
+          style={{
+            width: p.size,
+            opacity: p.opacity,
+            filter: "drop-shadow(0px 0px 8px rgba(0,210,255,0.6)) hue-rotate(15deg)",
+            willChange: "transform",
+          }}
+        />
+      ))}
+    </div>
   );
 }
