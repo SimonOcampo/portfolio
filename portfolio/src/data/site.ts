@@ -17,10 +17,10 @@ export const metadata = {
 } as const;
 
 export const sectionTitles = {
-  projects: { num: "01", title: "Selected Projects" },
-  experience: { num: "02", title: "Experience" },
-  involvement: { num: "03", title: "Leadership & Involvement" },
-  education: { num: "04", title: "Education" },
+  projects: { title: "Trainer Gauntlet" },
+  experience: { title: "Battle History" },
+  involvement: { title: "Training Grounds" },
+  education: { title: "Leader's Sanctum" },
 } as const;
 
 export const projectModal = {
@@ -34,8 +34,6 @@ export const linkLabels = {
 } as const;
 
 export const typewriterWords = [
-  "Graph Algorithms TA @ UCF CECS",
-  "Computer Science @ University of Central Florida",
-  "ML Engineer",
-  "Full Stack Developer",
+  "Gym Leader Simon wants to battle!",
+  "Challenger approaches the Neural Water Gym!",
 ] as const;

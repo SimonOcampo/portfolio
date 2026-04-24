@@ -2,15 +2,14 @@
 
 import { useEffect, useRef, useCallback, useState } from "react";
 
-const POKEMON_SPRITES = [
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/131.gif", // Lapras
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/245.gif", // Suicune
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/350.gif", // Milotic
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/134.gif", // Vaporeon
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/382.gif", // Kyogre
+const POKEMON_IDS = [
+  7, 55, 60, 72, 116, 131, 134, 158, 170, 183, 194, 226, 245, 258, 283, 320, 363, 382, 393, 490, 501, 515, 535, 564, 580
 ];
+const POKEMON_SPRITES = POKEMON_IDS.map(
+  (id) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`
+);
 
-const PARTICLE_COUNT = 15;
+const PARTICLE_COUNT = 25;
 const MOUSE_REPEL_RADIUS = 150;
 const MOUSE_REPEL_STRENGTH = 0.05;
 const DAMPING = 0.95;
@@ -43,6 +42,14 @@ export default function GraphBackground() {
 
   const initParticles = useCallback((width: number, height: number) => {
     const initialParticles: Particle[] = [];
+    
+    // Fisher-Yates shuffle for unique sprite distribution
+    const shuffledIndices = [...Array(Math.max(PARTICLE_COUNT, POKEMON_SPRITES.length)).keys()];
+    for (let i = shuffledIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+    }
+
     for (let i = 0; i < PARTICLE_COUNT; i++) {
         const pSize = randomBetween(40, 80);
       initialParticles.push({
@@ -53,7 +60,7 @@ export default function GraphBackground() {
         vy: randomBetween(-1.5, -0.5), // Drift upwards
         baseX: 0,
         baseY: 0,
-        spriteIndex: Math.floor(Math.random() * POKEMON_SPRITES.length),
+        spriteIndex: shuffledIndices[i],
         size: pSize,
         opacity: randomBetween(0.4, 0.8),
       });
@@ -186,7 +193,7 @@ export default function GraphBackground() {
           style={{
             width: p.size,
             opacity: p.opacity,
-            filter: "drop-shadow(0px 0px 8px rgba(0,210,255,0.6)) hue-rotate(15deg)",
+            filter: "drop-shadow(0px 0px 15px rgba(0,210,255,0.9)) drop-shadow(0px 0px 5px rgba(255,255,255,0.5)) hue-rotate(15deg)",
             willChange: "transform",
           }}
         />

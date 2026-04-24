@@ -19,9 +19,9 @@ export default function Experience() {
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="mb-12 text-3xl font-bold text-white flex items-center gap-3"
+        className="mb-12 text-3xl font-bold text-primary flex items-center gap-3"
       >
-        <span className="text-secondary">{sectionTitles.experience.num}.</span> {sectionTitles.experience.title}
+        {sectionTitles.experience.title}
       </motion.h2>
 
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-12">

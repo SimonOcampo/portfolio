@@ -21,9 +21,9 @@ export default function Projects() {
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="mb-12 text-3xl font-bold text-white flex items-center gap-3"
+        className="mb-12 text-3xl font-bold text-primary flex items-center gap-3"
       >
-        <span className="text-primary">{sectionTitles.projects.num}.</span> {sectionTitles.projects.title}
+        {sectionTitles.projects.title}
       </motion.h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -34,10 +34,15 @@ export default function Projects() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className={`${BENTO_SIZE[i] ?? "md:col-span-1"} cursor-pointer`}
+            className={`${BENTO_SIZE[i] ?? "md:col-span-1"} cursor-pointer flex flex-col gap-2`}
             onClick={() => setSelectedId(project.id)}
           >
-            <TiltCard className="h-full">
+            {/* Trainer Battle Header */}
+            <div className="font-mono text-xs md:text-sm text-secondary px-2">
+              <span className="font-bold text-white">[{project.trainerClass}] {project.trainerName}</span> wants to battle!
+            </div>
+            
+            <TiltCard className="h-full flex-grow">
               <SpotlightCard className="h-full p-8 rounded-2xl">
               <div className="w-full overflow-hidden rounded-lg bg-white/5 relative mb-4">
                 {project.images?.[0] ? (
@@ -45,6 +50,7 @@ export default function Projects() {
                     src={project.images[0]}
                     alt={project.title}
                     alignLeft={project.isWide}
+                    imagePosition={project.imagePosition}
                     className="rounded-none h-64"
                   />
                 ) : (

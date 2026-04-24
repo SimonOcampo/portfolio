@@ -9,9 +9,12 @@ interface CinematicImageProps {
   alt: string;
   className?: string;
   alignLeft?: boolean;
+  imagePosition?: "left-top" | "center" | "top";
 }
 
-export default function CinematicImage({ src, alt, className, alignLeft }: CinematicImageProps) {
+export default function CinematicImage({ src, alt, className, alignLeft, imagePosition }: CinematicImageProps) {
+  const isLeftTop = imagePosition === "left-top" || (!imagePosition && alignLeft);
+
   return (
     <div
       className={twMerge(
@@ -19,25 +22,32 @@ export default function CinematicImage({ src, alt, className, alignLeft }: Cinem
       )}
     >
       {/* Layer 1: Atmosphere — blurred background texture */}
-      <Image
-        src={src}
-        alt=""
-        fill
-        sizes="(max-width: 768px) 100vw, 672px"
-        className="object-cover blur-2xl scale-110 opacity-50"
-        aria-hidden
-      />
+      {!isLeftTop && (
+        <Image
+          src={src}
+          alt=""
+          fill
+          sizes="(max-width: 768px) 100vw, 1200px"
+          className="object-cover blur-2xl scale-110 opacity-50"
+          aria-hidden
+        />
+      )}
       {/* Layer 2: Foreground — fills box, uniform size */}
       <Image
         src={src}
         alt={alt}
         fill
-        sizes="(max-width: 768px) 100vw, 672px"
+        sizes="(max-width: 768px) 100vw, 1200px"
         className={clsx(
-          "object-cover z-10 drop-shadow-lg transition-transform duration-500 group-hover:scale-105",
-          alignLeft ? "object-left-top" : "object-center"
+          "z-10 drop-shadow-lg transition-transform duration-500 group-hover:scale-105",
+          "object-cover",
+          imagePosition === "left-top" && "object-left-top",
+          imagePosition === "center" && "object-center",
+          imagePosition === "top" && "object-top",
+          !imagePosition && (alignLeft ? "object-left-top" : "object-center")
         )}
         quality={100}
+        unoptimized={isLeftTop}
       />
     </div>
   );

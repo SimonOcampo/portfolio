@@ -12,9 +12,9 @@ export default function Involvement() {
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="mb-12 text-3xl font-bold text-white flex items-center gap-3"
+        className="mb-12 text-3xl font-bold text-primary flex items-center gap-3"
       >
-        <span className="text-secondary">{sectionTitles.involvement.num}.</span> {sectionTitles.involvement.title}
+        {sectionTitles.involvement.title}
       </motion.h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">

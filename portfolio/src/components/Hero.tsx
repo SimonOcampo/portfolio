@@ -2,11 +2,8 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Download, Github, Linkedin } from "lucide-react";
-import TextScramble from "@/components/TextScramble";
-import TypewriterText from "@/components/TypewriterText";
-import GraphBackground from "@/components/GraphBackground";
-import { hero, linkLabels, typewriterWords } from "@/data/site";
-import { GITHUB_URL, LINKEDIN_URL } from "@/data/links";
+import SequentialTypewriter from "@/components/SequentialTypewriter";
+import { hero, typewriterWords } from "@/data/site";
 
 const container = {
   hidden: { opacity: 0 },
@@ -33,65 +30,43 @@ const floating = {
   },
 };
 
-export default function Hero() {
+interface HeroProps {
+  onNext?: () => void;
+}
+
+export default function Hero({ onNext }: HeroProps) {
   return (
     <motion.section
       variants={container}
       initial="hidden"
       animate="show"
-      className="relative flex min-h-screen flex-col justify-center px-6 md:px-20 max-w-7xl mx-auto"
+      className="relative flex min-h-screen h-[100vh] flex-col items-center justify-center px-6 md:px-20 max-w-7xl mx-auto overflow-hidden text-center"
     >
-      {/* Interactive graph canvas behind Hero content */}
-      <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden>
-        <GraphBackground />
-      </div>
+      {/* Interactive graph canvas behind Hero content was moved to page.tsx */}
       <motion.h1 
         variants={floating}
         className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary drop-shadow-[0_0_10px_rgba(0,210,255,0.3)] pb-2"
       >
-        <TextScramble text={hero.name} />
+        {hero.name}
       </motion.h1>
-      <motion.h2
-        variants={floating}
-        className="mt-4 text-xl md:text-2xl text-text-muted font-mono"
-      >
-        <TypewriterText words={[...typewriterWords]} />
-      </motion.h2>
       <motion.div
-        variants={fadeIn}
-        transition={{ duration: 0.4 }}
-        className="mt-10 flex flex-wrap gap-4"
+        variants={floating}
+        className="mt-6 flex flex-col items-center min-h-[4rem]"
       >
-        <a
-          href={hero.ctaWorkHref}
-          className="flex items-center gap-2 bg-primary px-6 py-3 rounded-lg font-medium text-[#030B14] transition-all hover:bg-primary/90 shadow-[0_0_15px_rgba(0,210,255,0.4)] hover:shadow-[0_0_25px_rgba(0,210,255,0.7)]"
-        >
-          {hero.ctaWork} <ArrowRight size={20} />
-        </a>
-        <a
-          href={hero.ctaResumeHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 border border-white/20 px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-white/10"
-        >
-          {hero.ctaResume} <Download size={20} />
-        </a>
-        <a
-          href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 border border-white/20 px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-white/10"
-        >
-          GitHub <Github size={20} />
-        </a>
-        <a
-          href={LINKEDIN_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 border border-white/20 px-6 py-3 rounded-lg font-medium text-white transition-colors hover:bg-white/10"
-        >
-          {linkLabels.linkedin} <Linkedin size={20} />
-        </a>
+        <SequentialTypewriter lines={typewriterWords} />
+      </motion.div>
+      <motion.div
+        variants={floating}
+        className="mt-16 w-full max-w-md mx-auto"
+      >
+        {onNext && (
+          <button
+            onClick={onNext}
+            className="group flex flex-col items-center justify-center bg-primary/10 border-2 border-primary/80 text-white w-full px-6 py-5 rounded-xl font-bold uppercase tracking-widest transition-all hover:bg-primary shadow-[0_0_20px_rgba(0,210,255,0.4)] hover:shadow-[0_0_30px_rgba(0,210,255,0.8)] backdrop-blur-md"
+          >
+            <span className="flex items-center text-xl text-primary group-hover:text-[#030B14]">ENTER GYM ▶</span>
+          </button>
+        )}
       </motion.div>
     </motion.section>
   );
