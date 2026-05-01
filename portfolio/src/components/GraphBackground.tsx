@@ -1,203 +1,161 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 
 const POKEMON_IDS = [
-  7, 55, 60, 72, 116, 131, 134, 158, 170, 183, 194, 226, 245, 258, 283, 320, 363, 382, 393, 490, 501, 515, 535, 564, 580
+  7, 55, 60, 72, 116, 131, 134, 158, 170, 183, 194, 226, 245, 258, 283,
+  320, 363, 382, 393, 490, 501, 515, 535, 564, 580,
 ];
+
 const POKEMON_SPRITES = POKEMON_IDS.map(
-  (id) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`
+  (id) =>
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`
 );
 
-const PARTICLE_COUNT = 25;
-const MOUSE_REPEL_RADIUS = 150;
-const MOUSE_REPEL_STRENGTH = 0.05;
-const DAMPING = 0.95;
+const PARTICLE_COUNT = 8;
 
 interface Particle {
   id: number;
   x: number;
   y: number;
-  vx: number;
-  vy: number;
-  baseX: number;
-  baseY: number;
-  spriteIndex: number;
+  endX: number;
+  sway: number;
+  duration: number;
+  delay: number;
+  swayDuration: number;
+  sprite: string;
   size: number;
   opacity: number;
+  hueRotate: number;
 }
 
 function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
+function shuffle<T>(items: T[]) {
+  const copy = [...items];
+
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  return copy;
+}
+
+function createParticles(width: number, height: number): Particle[] {
+  return shuffle(POKEMON_SPRITES)
+    .slice(0, PARTICLE_COUNT)
+    .map((sprite, index) => ({
+      id: index,
+      x: randomBetween(-40, width + 40),
+      y: randomBetween(height + 60, height + 320),
+      endX: randomBetween(-120, 120),
+      sway: randomBetween(18, 72) * (Math.random() > 0.5 ? 1 : -1),
+      duration: randomBetween(24, 38),
+      delay: randomBetween(-30, 0),
+      swayDuration: randomBetween(4.5, 8),
+      sprite,
+      size: randomBetween(40, 74),
+      opacity: randomBetween(0.32, 0.72),
+      hueRotate: randomBetween(-12, 16),
+    }));
+}
+
 export default function GraphBackground() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const particlesRef = useRef<Particle[]>([]);
-  const mouseRef = useRef({ x: -1000, y: -1000 });
-  const rafRef = useRef<number>(0);
-  const isActiveRef = useRef(true);
   const [particles, setParticles] = useState<Particle[]>([]);
-  const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
-
-  const initParticles = useCallback((width: number, height: number) => {
-    const initialParticles: Particle[] = [];
-    
-    // Fisher-Yates shuffle for unique sprite distribution
-    const shuffledIndices = [...Array(Math.max(PARTICLE_COUNT, POKEMON_SPRITES.length)).keys()];
-    for (let i = shuffledIndices.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
-    }
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const pSize = randomBetween(40, 80);
-      initialParticles.push({
-        id: i,
-        x: randomBetween(0, width),
-        y: randomBetween(height, height + 500), // Start from bottom
-        vx: randomBetween(-0.5, 0.5),
-        vy: randomBetween(-1.5, -0.5), // Drift upwards
-        baseX: 0,
-        baseY: 0,
-        spriteIndex: shuffledIndices[i],
-        size: pSize,
-        opacity: randomBetween(0.4, 0.8),
-      });
-    }
-    particlesRef.current = initialParticles;
-    setParticles([...initialParticles]);
-  }, []);
 
   useEffect(() => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    initParticles(w, h);
-    
-    // We don't need to reinit on resize, just let them float.
-  }, [initParticles]);
+    let resizeTimer: number | undefined;
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-    };
-    const handleMouseLeave = () => {
-      mouseRef.current = { x: -1000, y: -1000 };
+    const syncParticles = () => {
+      setParticles(createParticles(window.innerWidth, window.innerHeight));
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseleave", handleMouseLeave);
+    const handleResize = () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(syncParticles, 120);
+    };
+
+    syncParticles();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("resize", handleResize);
+      window.clearTimeout(resizeTimer);
     };
   }, []);
-
-  useEffect(() => {
-    const startLoop = () => {
-      if (rafRef.current) return;
-      
-      const tick = () => {
-        if (!isActiveRef.current) return;
-        
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        const pts = particlesRef.current;
-        const mouse = mouseRef.current;
-
-        for (let i = 0; i < pts.length; i++) {
-          const p = pts[i];
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist < MOUSE_REPEL_RADIUS && dist > 0) {
-            const force = (1 - dist / MOUSE_REPEL_RADIUS) * MOUSE_REPEL_STRENGTH;
-            const nx = dx / dist;
-            const ny = dy / dist;
-            p.vx += nx * force * 5;
-            p.vy += ny * force * 5;
-          }
-          
-          // Gentle upward drift + wobble
-          p.vy -= 0.01; 
-          p.vx += Math.sin(Date.now() / 1000 + p.id) * 0.02;
-          
-          p.vx *= DAMPING;
-          p.vy *= DAMPING;
-          
-          p.x += p.vx;
-          p.y += p.vy;
-
-          // Wrap around screen
-          if (p.y < -100) {
-              p.y = h + 100;
-              p.x = randomBetween(0, w);
-              p.vy = randomBetween(-1.5, -0.5);
-          }
-          if (p.x < -100) p.x = w + 100;
-          if (p.x > w + 100) p.x = -100;
-
-          // Apply transform directly to DOM nodes for max performance without React state re-renders
-          const imgEl = imageRefs.current[p.id];
-          if (imgEl) {
-              imgEl.style.transform = `translate3d(${p.x}px, ${p.y}px, 0)`;
-          }
-        }
-
-        if (isActiveRef.current) {
-          rafRef.current = requestAnimationFrame(tick);
-        } else {
-          rafRef.current = 0;
-        }
-      };
-      
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    const handleVisibility = () => {
-      isActiveRef.current = document.visibilityState === "visible";
-      if (isActiveRef.current && particlesRef.current.length > 0) {
-          startLoop();
-      }
-    };
-    
-    document.addEventListener("visibilitychange", handleVisibility);
-    if (particlesRef.current.length > 0) {
-       startLoop();
-    }
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = 0;
-    };
-  }, [particles]);
 
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 z-0 overflow-hidden pointer-events-none"
-      aria-hidden
-    >
-      {particles.map((p, i) => (
-        <img
-          key={p.id}
-          ref={(el) => {
-            imageRefs.current[p.id] = el;
-          }}
-          src={POKEMON_SPRITES[p.spriteIndex]}
-          alt=""
-          className="absolute top-0 left-0"
-          style={{
-            width: p.size,
-            opacity: p.opacity,
-            filter: "drop-shadow(0px 0px 15px rgba(0,210,255,0.9)) drop-shadow(0px 0px 5px rgba(255,255,255,0.5)) hue-rotate(15deg)",
-            willChange: "transform",
-          }}
-        />
-      ))}
-    </div>
+    <>
+      <div
+        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+        aria-hidden
+      >
+        {particles.map((particle) => {
+          const riseStyle = {
+            "--sprite-x": `${particle.x}px`,
+            "--sprite-y": `${particle.y}px`,
+            "--sprite-end-x": `${particle.endX}px`,
+            animation: `water-sprite-rise ${particle.duration}s linear ${particle.delay}s infinite`,
+          } as CSSProperties;
+
+          const swayStyle = {
+            "--sprite-drift": `${particle.sway}px`,
+            animation: `water-sprite-sway ${particle.swayDuration}s ease-in-out ${particle.delay}s infinite alternate`,
+          } as CSSProperties;
+
+          return (
+            <div
+              key={particle.id}
+              className="absolute left-0 top-0 will-change-transform"
+              style={riseStyle}
+            >
+              <div className="will-change-transform" style={swayStyle}>
+                <img
+                  src={particle.sprite}
+                  alt=""
+                  decoding="async"
+                  className="block object-contain"
+                  style={{
+                    width: particle.size,
+                    opacity: particle.opacity,
+                    imageRendering: "pixelated",
+                    filter: `drop-shadow(0 0 14px rgba(0,210,255,0.75)) drop-shadow(0 0 6px rgba(255,255,255,0.28)) hue-rotate(${particle.hueRotate}deg)`,
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <style jsx>{`
+        @keyframes water-sprite-rise {
+          from {
+            transform: translate3d(var(--sprite-x), var(--sprite-y), 0);
+          }
+
+          to {
+            transform: translate3d(
+              calc(var(--sprite-x) + var(--sprite-end-x)),
+              -140px,
+              0
+            );
+          }
+        }
+
+        @keyframes water-sprite-sway {
+          from {
+            transform: translateX(calc(var(--sprite-drift) * -0.5));
+          }
+
+          to {
+            transform: translateX(calc(var(--sprite-drift) * 0.5));
+          }
+        }
+      `}</style>
+    </>
   );
 }

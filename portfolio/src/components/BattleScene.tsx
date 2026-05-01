@@ -129,9 +129,9 @@ function AttackEffect({ moveType, playerPokemonSrc }: { moveType: "water" | "gra
         />
         {/* Phase B: Thick flame stream */}
         <motion.div
-           className="absolute bottom-[160px] left-[100px] md:bottom-[200px] md:left-[180px] w-[65%] md:w-[50%] origin-left"
-           initial={{ scaleX: 0, rotate: -28 }}
-           animate={{ scaleX: 1, opacity: [0.8, 1, 0.8, 1, 0], rotate: -28 }}
+           className="absolute bottom-[120px] left-[100px] md:bottom-[150px] md:left-[180px] w-[65%] md:w-[50%] origin-left"
+           initial={{ scaleX: 0, rotate: -20 }}
+           animate={{ scaleX: 1, opacity: [0.8, 1, 0.8, 1, 0], rotate: -20 }}
            transition={{ delay: 0.35, duration: 0.5, times: [0, 0.2, 0.5, 0.8, 1] }}
         >
            <div className="absolute inset-0 h-10 md:h-16 bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 blur-md rounded-full mix-blend-screen" />
