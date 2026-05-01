@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import SequentialTypewriter from "@/components/SequentialTypewriter";
 import { hero, typewriterWords } from "@/data/site";
 
-const floating = {
+const floating: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
@@ -18,7 +18,7 @@ const floating = {
   },
 };
 
-const breathing = {
+const breathing: Variants = {
   animate: {
     scale: [1, 1.02, 1],
     y: [0, -3, 0],
