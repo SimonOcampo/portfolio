@@ -26,7 +26,7 @@ export const projects: Project[] = [
     images: ["/projects/procurement-dashboard.png", "/projects/procurement-form.png"],
     githubUrl: "https://github.com/SimonOcampo/procurement-decision-tool",
     isWide: true,
-    imagePosition: "left-top",
+    imagePosition: "top",
   },
   {
     id: "knightlife-events",
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     images: ["/projects/knightlife-home.png", "/projects/knightlife-events.png", "/projects/knightlife-details.png"],
     githubUrl: "https://github.com/SimonOcampo/knightlife",
     isWide: true,
-    imagePosition: "left-top",
+    imagePosition: "center",
   },
   {
     id: "aml-gnn-detection",
