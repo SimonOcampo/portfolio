@@ -69,5 +69,17 @@ export const projects: Project[] = [
     images: ["/projects/khaven1.png", "/projects/khaven2.png", "/projects/khaven3.png", "/projects/khaven4.png"],
     githubUrl: "https://github.com/SimonOcampo/KnightHaven"
   },
-  
+  {
+    id: "procurement-decision-tool",
+    title: "Procurement Decision Tool",
+    trainerClass: "Devon Executive",
+    trainerName: "Steven",
+    shortDesc: "Full-stack intake and decision engine automating enterprise purchasing via Pydantic rules and Gemini AI.",
+    longDesc: "Built an enterprise procurement-support system with React, FastAPI, and PostgreSQL. It streamlines purchase requests by feeding them through an explainable decision engine that integrates heuristic checks and Gemini-based semantic analysis for justification quality. Real-time market validation is handled asynchronously using SerpApi Google Shopping (with a local DummyJSON fallback) to calculate price deviations and source comparable alternatives, all monitored through an MUI admin dashboard.",
+    technologies: ["React", "FastAPI", "PostgreSQL", "Gemini API", "SerpApi", "Material UI", "Docker"],
+    images: ["/projects/procurement-dashboard.png", "/projects/procurement-form.png"],
+    githubUrl: "https://github.com/SimonOcampo/procurement-decision-tool",
+    isWide: true,
+    imagePosition: "left-top",
+  }
 ];
