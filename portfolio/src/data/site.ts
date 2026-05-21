@@ -12,7 +12,7 @@ export const hero = {
 } as const;
 
 export const metadata = {
-  title: "Simon Ocampo Millan | Portfolio",
+  title: "Neural Water Gym | Simon Ocampo Millan | Portfolio",
   description: "Teaching Assistant @  UCF CECS · Computer Science @ UCF",
 } as const;
 

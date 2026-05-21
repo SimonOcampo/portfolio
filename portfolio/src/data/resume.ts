@@ -42,32 +42,51 @@ export const education: Education = {
   university: "University of Central Florida",
   degree: "B.S. in Computer Science",
   graduation: "May 2027",
-  gpa: 3.9,
+  gpa: 3.8,
   skills: [
     "Python",
     "Java",
     "C",
     "C++",
     "JavaScript",
+    "TypeScript",
     "SQL",
-    "PyTorch",
-    "NumPy",
-    "Pandas",
-    "Seaborn",
-    "PuLP",
-    "matplotlib",
+    "HTML/CSS",
     "React",
+    "Next.js",
+    "FastAPI",
     "Node.js",
     "Express",
     "Flask",
+    "PyTorch",
+    "PyTorch Geometric",
+    "Pandas",
+    "NumPy",
+    "matplotlib",
+    "Seaborn",
+    "Streamlit",
+    "TailwindCSS",
+    "Material UI",
+    "SQLAlchemy",
     "Git/GitHub",
-    "AWS",
     "Docker",
-    "REST APIs",
+    "PostgreSQL",
+    "Redis",
+    "SQLite",
+    "AWS",
+    "Gemini API",
     "OpenAI APIs",
+    "Hugging Face",
+    "Auth0",
+    "Apify",
+    "SerpApi",
+    "Yelp Fusion API",
+    "BeautifulSoup",
+    "REST APIs",
     "GoHighLevel",
     "Make",
     "Odoo",
+    "PuLP",
   ],
 };
 
@@ -80,7 +99,7 @@ export const experience: Experience[] = [
     company: "UCF CECS",
     title: "Teaching Assistant for Dr. Mahfuz Rahman",
     startDate: "Aug 2025",
-    endDate: "Present",
+    endDate: "Aug 2026",
     bullets: [
       "Guided 100+ students weekly in labs, reinforcing recursion, graph algorithms, and data structure implementation.",
       "Debugged and explained complex Java programs during office hours, improving assignment completion and exam performance.",
@@ -112,7 +131,7 @@ export const experience: Experience[] = [
   },
   {
     company: "Pactemos",
-    title: "Software Intern",
+    title: "Software Engineering Intern",
     startDate: "Dec 2024",
     endDate: "Jan 2025",
     bullets: [
@@ -124,49 +143,19 @@ export const experience: Experience[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// 3. Projects
-// ---------------------------------------------------------------------------
-
-export const resumeProjects: ResumeProject[] = [
-  {
-    title: "KnightHaven",
-    role: "Full-Stack Developer",
-    date: "Oct 2025",
-    tech: ["React", "Express", "SQLite", "Auth0", "Yelp Fusion API"],
-    bullets: [
-      "Built a full-stack platform for event discovery and management for the UCF community.",
-      "Implemented Auth0 verification and role-based access for secure user flows.",
-      "Developed Flask scraper to ingest and normalize events from multiple campus sources.",
-      "Integrated Yelp Fusion API to enrich event and venue data with ratings and details.",
-    ],
-  },
-  {
-    title: "AI Document Assistant",
-    role: "ML Engineer",
-    date: "Dec 2025",
-    tech: ["RAG", "Python", "Hugging Face", "Streamlit"],
-    bullets: [
-      "Built a production-grade RAG system for technical documentation Q&A and knowledge discovery.",
-      "Implemented hybrid retrieval with dense embeddings and BM25 for improved recall and precision.",
-      "Added semantic chunking and metadata filters to improve context quality for the LLM.",
-      "Deployed on Hugging Face Spaces with a Streamlit UI for easy experimentation and demos.",
-    ],
-  },
-];
-
-// ---------------------------------------------------------------------------
-// 4. Involvement
+// 3. Involvement
 // ---------------------------------------------------------------------------
 
 export const involvement: Involvement[] = [
   {
     org: "Theta Tau",
-    role: "Academic, Athletics, Community Service Boards Member",
+    role: "Web Dev Committee · Community Service, Academic, and Athletic Boards",
     startDate: "Nov 2025",
     endDate: "Present",
     bullets: [
-      "Contributed to service initiatives and community engagement projects.",
-      "Participated in networking sessions and professional development events.",
+      "Developed brother-to-brother support request web system, improving response times by 40%",
+      "Built backend infrastructure to handle and organize requests, track progress, and manage brotherly support",
+      "Organized and participated in community service events, including park cleanups and food drives."
     ],
   },
   {
@@ -176,7 +165,7 @@ export const involvement: Involvement[] = [
     endDate: "Present",
     bullets: [
       "Initiated into Tau Beta Pi (top 12.5% of engineering students) for academic excellence.",
-      "Guided candidates through initiation and helped grow the chapter's membership.",
+      "Recruit and onboard new members through engaging activities and outreach events, increasing chapter membership by 15%.",
     ],
   },
 ];
