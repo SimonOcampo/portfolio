@@ -34,7 +34,7 @@ export default function SpotlightCard({ children, className }: SpotlightCardProp
       )}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-spotlight pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background:
             "radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 210, 255, 0.15) 0%, transparent 50%)",

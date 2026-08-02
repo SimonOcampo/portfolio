@@ -1,72 +1,49 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { X, Github, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
-import type { Project } from "@/data/projects";
+import { X, Github, ExternalLink, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import FullscreenDialog from "@/components/FullscreenDialog";
+import type { Project, ProjectMedia } from "@/data/projects";
 import { projectModal } from "@/data/site";
 
-interface ImageCarouselProps {
-  images: string[];
-  altPrefix: string;
-}
-
-function ImageCarousel({ images, altPrefix }: ImageCarouselProps) {
+function MediaViewer({ media, title }: { media: ProjectMedia[]; title: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const goNext = () => {
-    setCurrentIndex((i) => (i + 1) % images.length);
-  };
-  const goPrev = () => {
-    setCurrentIndex((i) => (i - 1 + images.length) % images.length);
-  };
-
-  if (!images.length) {
-    return (
-      <div className="aspect-video w-full bg-slate-600 rounded-t-2xl flex items-center justify-center">
-        <span className="text-white/50 text-sm">No image</span>
-      </div>
-    );
-  }
-
-  const showNav = images.length > 1;
+  const current = media[currentIndex];
+  const showNav = media.length > 1;
 
   return (
-    <div className="relative overflow-hidden rounded-t-2xl bg-white/5">
-      <div className="flex h-64 min-h-64 items-center justify-center bg-neutral-900/50 md:h-80 md:min-h-80">
-        <img
-          src={images[currentIndex]}
-          alt={`${altPrefix} — image ${currentIndex + 1} of ${images.length}`}
-          className="max-h-full w-auto max-w-full object-contain"
-        />
+    <div className="relative overflow-hidden border-b border-white/10 bg-[#02070d]">
+      <div className="relative flex h-60 items-center justify-center sm:h-[clamp(18rem,42dvh,24rem)]">
+        {current.type === "video" ? (
+          <video controls preload="metadata" poster={current.poster} aria-label={current.alt} className="max-h-full max-w-full">
+            <source src={current.src} type="video/webm" />
+          </video>
+        ) : (
+          <Image
+            src={current.src}
+            alt={current.alt}
+            fill
+            sizes="(max-width: 768px) 100vw, 896px"
+            quality={84}
+            unoptimized={current.src.endsWith(".gif")}
+            className={`object-contain ${current.position === "left-top" ? "object-left-top" : current.position === "top" ? "object-top" : "object-center"}`}
+          />
+        )}
       </div>
+
       {showNav && (
         <>
-          <button
-            type="button"
-            onClick={goPrev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 rounded-full p-2 bg-black/50 hover:bg-black/70 text-white transition-colors"
-            aria-label="Previous image"
-          >
-            <ChevronLeft size={24} />
+          <button type="button" onClick={() => setCurrentIndex((index) => (index - 1 + media.length) % media.length)} className="absolute left-2 top-1/2 z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-black/65 text-white backdrop-blur transition-colors hover:bg-black/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Previous media">
+            <ChevronLeft size={23} />
           </button>
-          <button
-            type="button"
-            onClick={goNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 rounded-full p-2 bg-black/50 hover:bg-black/70 text-white transition-colors"
-            aria-label="Next image"
-          >
-            <ChevronRight size={24} />
+          <button type="button" onClick={() => setCurrentIndex((index) => (index + 1) % media.length)} className="absolute right-2 top-1/2 z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-black/65 text-white backdrop-blur transition-colors hover:bg-black/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Next media">
+            <ChevronRight size={23} />
           </button>
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
-            {images.map((_, i) => (
-              <span
-                key={i}
-                className={`h-2 w-2 rounded-full transition-colors ${
-                  i === currentIndex ? "bg-white" : "bg-white/40"
-                }`}
-                aria-hidden
-              />
+          <div className="absolute inset-x-0 bottom-3 z-20 flex justify-center gap-1.5" aria-label={`${title} media ${currentIndex + 1} of ${media.length}`}>
+            {media.map((item, index) => (
+              <button key={item.src} type="button" onClick={() => setCurrentIndex(index)} aria-label={`Show media ${index + 1}`} aria-current={index === currentIndex ? "true" : undefined} className={`h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${index === currentIndex ? "w-6 bg-primary" : "w-2 bg-white/35 hover:bg-white/60"}`} />
             ))}
           </div>
         </>
@@ -81,122 +58,77 @@ interface ProjectModalProps {
 }
 
 export default function ProjectModal({ selectedProject, onClose }: ProjectModalProps) {
-  const media = useMemo(
-    () =>
-      [selectedProject.demoGif, ...(selectedProject.images || [])].filter(
-        Boolean
-      ) as string[],
-    [selectedProject.demoGif, selectedProject.images]
-  );
-
-  const carouselImages =
-    selectedProject.isWide && media.length > 0 ? media : selectedProject.images ?? [];
-
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+  const headingId = `project-${selectedProject.id}-title`;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+    <FullscreenDialog
+      onClose={onClose}
+      labelledBy={headingId}
+      contentClassName="flex h-full items-center justify-center p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[max(0.5rem,env(safe-area-inset-top))] sm:p-5"
     >
-      <div
-        role="presentation"
-        className="absolute inset-0 bg-black/70"
-        onClick={onClose}
-      />
       <motion.article
-        initial={{ scale: 0.96 }}
-        animate={{ scale: 1 }}
+        initial={{ opacity: 0, scale: 0.975, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.98, y: 8 }}
         transition={{ duration: 0.2 }}
-        className="relative z-10 w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/10 bg-surface/95 shadow-2xl backdrop-blur-xl"
-        onClick={(e) => e.stopPropagation()}
+        className="relative max-h-full w-full max-w-4xl overflow-y-auto overscroll-contain rounded-2xl border border-white/12 bg-[#091a2e]/98 shadow-[0_24px_90px_rgba(0,0,0,0.7),0_0_40px_rgba(0,210,255,0.1)]"
       >
-        {/* Close */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 right-4 z-20 rounded-full p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="Close"
-        >
-          <X size={22} />
+        <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 grid size-11 place-items-center rounded-full border border-white/10 bg-black/65 text-white/75 backdrop-blur transition-colors hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Close project case study">
+          <X size={21} />
         </button>
 
-        {/* Image area: AIDocAssistant = horizontal scroller; others = carousel */}
-        {selectedProject.id === "ai-document-assistant" &&
-        selectedProject.images?.[0] ? (
-          <div className="w-full h-[500px] overflow-x-auto overflow-y-hidden rounded-t-2xl border-b border-white/10 bg-neutral-900 flex items-center bg-grid-white/[0.05]">
-            <img
-              src={selectedProject.images[0]}
-              alt={selectedProject.title}
-              className="h-full w-auto max-w-none object-contain"
-            />
-          </div>
-        ) : (
-          <ImageCarousel
-            key={selectedProject.id}
-            images={carouselImages}
-            altPrefix={selectedProject.title}
-          />
-        )}
+        <MediaViewer media={selectedProject.media} title={selectedProject.title} />
 
-        <div className="p-8">
-          <h2 className="text-2xl font-bold text-white">{selectedProject.title}</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
+        <div className="p-5 sm:p-8 lg:p-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-primary/70">Case study // {selectedProject.trainerClass}</p>
+          <h2 id={headingId} className="mt-2 text-balance text-2xl font-black leading-tight text-white sm:text-3xl">{selectedProject.title}</h2>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-text-muted sm:text-lg">{selectedProject.summary}</p>
+
+          <div className="mt-6 flex flex-wrap gap-2">
             {selectedProject.technologies.map((tag) => (
-              <span
-                key={tag}
-                className="text-xs font-mono rounded bg-white/10 px-2 py-1 text-white/80"
-              >
-                {tag}
-              </span>
+              <span key={tag} className="rounded-md border border-white/[0.07] bg-white/[0.045] px-2.5 py-1.5 font-mono text-[10px] text-slate-300 sm:text-xs">{tag}</span>
             ))}
           </div>
-          <p className="mt-6 leading-relaxed text-text-muted">
-            {selectedProject.longDesc}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+
+          <div className="mt-9 grid gap-7 lg:grid-cols-2 lg:gap-10">
+            <div className="space-y-7">
+              <section>
+                <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-secondary">Problem</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300 sm:text-base">{selectedProject.caseStudy.problem}</p>
+              </section>
+              <section>
+                <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-secondary">Approach</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300 sm:text-base">{selectedProject.caseStudy.approach}</p>
+              </section>
+            </div>
+
+            <section className="rounded-2xl border border-primary/15 bg-primary/[0.045] p-5 sm:p-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">Outcomes</p>
+              <ul className="mt-4 space-y-3">
+                {selectedProject.caseStudy.outcomes.map((outcome) => (
+                  <li key={outcome} className="flex gap-3 text-sm leading-relaxed text-slate-200">
+                    <CheckCircle2 className="mt-0.5 shrink-0 text-primary" size={17} />
+                    {outcome}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+
+          <div className="mt-9 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row">
             {selectedProject.githubUrl && (
-              <a
-                href={selectedProject.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
-              >
-                <Github size={18} />
-                {projectModal.viewCode}
+              <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 text-sm font-bold text-white transition-colors hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                <Github size={18} /> {projectModal.viewCode}
               </a>
             )}
             {selectedProject.liveUrl && (
-              <a
-                href={selectedProject.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
-              >
-                <ExternalLink size={18} />
-                {projectModal.liveDemo}
+              <a href={selectedProject.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-5 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                <ExternalLink size={18} /> {projectModal.liveDemo}
               </a>
             )}
           </div>
         </div>
       </motion.article>
-    </motion.div>
+    </FullscreenDialog>
   );
 }

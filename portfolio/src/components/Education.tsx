@@ -1,293 +1,225 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { education } from "@/data/resume";
-import { sectionTitles } from "@/data/site";
-import { GITHUB_URL, LINKEDIN_URL } from "@/data/links";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { ChevronDown, Droplet, RotateCcw, Swords } from "lucide-react";
 import BattleScene from "@/components/BattleScene";
 import SelectionScreen from "@/components/SelectionScreen";
-import { Linkedin, Github, FileText, Mail } from "lucide-react";
+import { education } from "@/data/resume";
+import { sectionTitles } from "@/data/site";
+import { useHydratedReducedMotion } from "@/hooks/useHydratedReducedMotion";
+import {
+  BATTLE_VICTORY_STORAGE_KEY,
+  restoreBattleVictory,
+  type Pokemon,
+  type StoredBattleVictory,
+  type Trainer,
+} from "@/data/battle";
 
 type SkillCategory = "Languages" | "Frameworks" | "Tools";
+type BattleState = "restoring" | "idle" | "selecting" | "battling" | "defeated";
 
 const SKILL_CATEGORIES: Record<string, SkillCategory> = {
-  Python: "Languages",
-  Java: "Languages",
-  C: "Languages",
-  "C++": "Languages",
-  JavaScript: "Languages",
-  TypeScript: "Languages",
-  SQL: "Languages",
-  "HTML/CSS": "Languages",
-  React: "Frameworks",
-  "Next.js": "Frameworks",
-  FastAPI: "Frameworks",
-  "Node.js": "Frameworks",
-  Express: "Frameworks",
-  Flask: "Frameworks",
-  PyTorch: "Frameworks",
-  "PyTorch Geometric": "Frameworks",
-  Pandas: "Frameworks",
-  NumPy: "Frameworks",
-  matplotlib: "Frameworks",
-  Seaborn: "Frameworks",
-  Streamlit: "Frameworks",
-  TailwindCSS: "Frameworks",
-  "Material UI": "Frameworks",
-  SQLAlchemy: "Frameworks",
-  PuLP: "Frameworks",
-  "Git/GitHub": "Tools",
-  AWS: "Tools",
-  Docker: "Tools",
-  PostgreSQL: "Tools",
-  Redis: "Tools",
-  SQLite: "Tools",
-  "Gemini API": "Tools",
-  "OpenAI APIs": "Tools",
-  "Hugging Face": "Tools",
-  Auth0: "Tools",
-  Apify: "Tools",
-  SerpApi: "Tools",
-  "Yelp Fusion API": "Tools",
-  BeautifulSoup: "Tools",
-  "REST APIs": "Tools",
-  GoHighLevel: "Tools",
-  Make: "Tools",
-  Odoo: "Tools",
+  Python: "Languages", Java: "Languages", C: "Languages", "C++": "Languages",
+  JavaScript: "Languages", TypeScript: "Languages", SQL: "Languages", "HTML/CSS": "Languages",
+  React: "Frameworks", "Next.js": "Frameworks", FastAPI: "Frameworks", "Node.js": "Frameworks",
+  Express: "Frameworks", Flask: "Frameworks", PyTorch: "Frameworks", "PyTorch Geometric": "Frameworks",
+  Pandas: "Frameworks", NumPy: "Frameworks", matplotlib: "Frameworks", Seaborn: "Frameworks",
+  Streamlit: "Frameworks", TailwindCSS: "Frameworks", "Material UI": "Frameworks", SQLAlchemy: "Frameworks",
+  PuLP: "Frameworks", "Git/GitHub": "Tools", AWS: "Tools", Docker: "Tools", PostgreSQL: "Tools",
+  Redis: "Tools", SQLite: "Tools", "Gemini API": "Tools", "OpenAI APIs": "Tools", "Hugging Face": "Tools",
+  Auth0: "Tools", Apify: "Tools", SerpApi: "Tools", "Yelp Fusion API": "Tools", BeautifulSoup: "Tools",
+  "REST APIs": "Tools", GoHighLevel: "Tools", Make: "Tools", Odoo: "Tools",
 };
 
 const CATEGORY_ORDER: SkillCategory[] = ["Languages", "Frameworks", "Tools"];
+const DEFAULT_SKILLS_PER_CATEGORY = 8;
 
-function groupSkillsByCategory(skills: string[]): Record<SkillCategory, string[]> {
-  const grouped: Record<SkillCategory, string[]> = {
-    Languages: [],
-    Frameworks: [],
-    Tools: [],
-  };
-  for (const skill of skills) {
-    const cat = SKILL_CATEGORIES[skill] ?? "Tools";
-    grouped[cat].push(skill);
-  }
-  return grouped;
+function groupSkills(skills: string[]): Record<SkillCategory, string[]> {
+  const groups: Record<SkillCategory, string[]> = { Languages: [], Frameworks: [], Tools: [] };
+  skills.forEach((skill) => groups[SKILL_CATEGORIES[skill] ?? "Tools"].push(skill));
+  return groups;
 }
 
 export default function Education() {
-  const [battleState, setBattleState] = useState<"idle" | "selecting" | "battling" | "defeated">("idle");
-  const [selectedTrainer, setSelectedTrainer] = useState<{name: string, sprite: string} | null>(null);
-  const [selectedPokemon, setSelectedPokemon] = useState<{id: number, name: string, move: string, type: "water" | "grass" | "fire"} | null>(null);
-  const [emailCopied, setEmailCopied] = useState(false);
+  const [battleState, setBattleState] = useState<BattleState>("restoring");
+  const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null);
+  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+  const [showAllSkills, setShowAllSkills] = useState(false);
+  const rewardRef = useRef<HTMLDivElement>(null);
+  const challengeRef = useRef<HTMLButtonElement>(null);
+  const shouldReduceMotion = useHydratedReducedMotion();
+  const skillsByCategory = useMemo(() => groupSkills(education.skills), []);
 
-  const skillsByCategory = useMemo(() => groupSkillsByCategory(education.skills), []);
+  useEffect(() => {
+    let restored: ReturnType<typeof restoreBattleVictory> = null;
+    try {
+      restored = restoreBattleVictory(window.sessionStorage.getItem(BATTLE_VICTORY_STORAGE_KEY));
+    } catch {
+      // Storage can be unavailable in hardened browsing modes.
+    }
+    if (!restored) {
+      try {
+        window.sessionStorage.removeItem(BATTLE_VICTORY_STORAGE_KEY);
+      } catch {
+        // Storage can be unavailable in hardened browsing modes.
+      }
+    }
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText("simonomillan15@gmail.com");
-    setEmailCopied(true);
-    setTimeout(() => setEmailCopied(false), 2000);
+    const restoreTimer = window.setTimeout(() => {
+      if (restored) {
+        setSelectedTrainer(restored.trainer);
+        setSelectedPokemon(restored.pokemon);
+        setBattleState("defeated");
+      } else {
+        setBattleState("idle");
+      }
+    }, 0);
+
+    return () => window.clearTimeout(restoreTimer);
+  }, []);
+
+  useEffect(() => {
+    if (battleState !== "defeated") return;
+    const timer = window.setTimeout(
+      () => {
+        rewardRef.current?.scrollIntoView({ behavior: shouldReduceMotion ? "auto" : "smooth", block: "start" });
+        rewardRef.current?.focus({ preventScroll: true });
+      },
+      shouldReduceMotion ? 0 : 220
+    );
+    return () => window.clearTimeout(timer);
+  }, [battleState, shouldReduceMotion]);
+
+  const handleBattleStart = (trainer: Trainer, pokemon: Pokemon) => {
+    setSelectedTrainer(trainer);
+    setSelectedPokemon(pokemon);
+    setBattleState("battling");
+  };
+
+  const handleBadgeEarned = (trainer: Trainer, pokemon: Pokemon) => {
+    setSelectedTrainer(trainer);
+    setSelectedPokemon(pokemon);
+    const storedVictory: StoredBattleVictory = {
+      version: 2,
+      trainerName: trainer.name,
+      pokemonId: pokemon.id,
+    };
+    try {
+      window.sessionStorage.setItem(BATTLE_VICTORY_STORAGE_KEY, JSON.stringify(storedVictory));
+    } catch {
+      // The reward still works when storage is unavailable.
+    }
+    setBattleState("defeated");
+  };
+
+  const replayBattle = () => {
+    try {
+      window.sessionStorage.removeItem(BATTLE_VICTORY_STORAGE_KEY);
+    } catch {
+      // Session persistence is an enhancement, not a prerequisite.
+    }
+    setSelectedTrainer(null);
+    setSelectedPokemon(null);
+    setBattleState("selecting");
+  };
+
+  const returnToChallenge = () => {
+    setBattleState("idle");
+    window.requestAnimationFrame(() => challengeRef.current?.focus({ preventScroll: true }));
   };
 
   return (
-    <section className="px-6 py-24 max-w-7xl mx-auto relative">
+    <section aria-labelledby="education-heading" className="relative mx-auto w-full min-w-0 max-w-7xl px-5 py-14 sm:px-8 md:py-20 lg:px-12">
+      {battleState === "selecting" && <SelectionScreen onCancel={returnToChallenge} onStart={handleBattleStart} />}
+      {battleState === "battling" && selectedTrainer && selectedPokemon && (
+        <BattleScene
+          onEarnBadge={handleBadgeEarned}
+          onCancel={returnToChallenge}
+          onReplay={replayBattle}
+          trainer={selectedTrainer}
+          pokemon={selectedPokemon}
+        />
+      )}
 
-      {/* Full-screen selection overlay */}
-      <AnimatePresence>
-        {battleState === "selecting" && (
-          <SelectionScreen 
-            onCancel={() => setBattleState("idle")}
-            onStart={(trainer: {name: string, sprite: string}, pokemon: {id: number, name: string, move: string, type: "water" | "grass" | "fire"}) => {
-              setSelectedTrainer(trainer);
-              setSelectedPokemon(pokemon);
-              setBattleState("battling");
-            }}
-          />
-        )}
-      </AnimatePresence>
+      <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8 sm:mb-12">
+        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.28em] text-secondary sm:text-xs">04 / Education + Skills</p>
+        <h2 id="education-heading" className="text-3xl font-black tracking-tight text-primary sm:text-4xl">{sectionTitles.education.title}</h2>
+      </motion.div>
 
-      {/* Full-screen battle overlay */}
-      <AnimatePresence>
-        {battleState === "battling" && selectedTrainer && selectedPokemon && (
-          <BattleScene 
-            onComplete={() => setBattleState("defeated")}
-            trainerName={selectedTrainer.name}
-            trainerSprite={selectedTrainer.sprite}
-            pokemonId={selectedPokemon.id}
-            pokemonName={selectedPokemon.name}
-            moveName={selectedPokemon.move}
-            moveType={selectedPokemon.type}
-          />
-        )}
-      </AnimatePresence>
-
-      <motion.h2
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-12 text-3xl font-bold text-primary flex items-center gap-3"
-      >
-        {sectionTitles.education.title}
-      </motion.h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
-        {/* Left: Education */}
-        <motion.div
-          initial={{ opacity: 0, x: -16 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="space-y-4"
-        >
-          <p className="text-xl font-semibold text-text-main">{education.university}</p>
-          <p className="text-lg text-white">{education.degree}</p>
-          <p>
-            <span className="text-secondary font-bold">GPA {education.gpa}</span>
-          </p>
-          <p className="text-sm text-text-muted">
-            Expected Graduation: {education.graduation}
+      <div className="grid min-w-0 grid-cols-1 gap-10 md:grid-cols-[0.78fr_1.22fr] md:gap-14">
+        <motion.div initial={{ opacity: 0, x: -14 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="rounded-2xl border border-white/[0.07] bg-[#071526]/72 p-5 sm:p-7">
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-secondary">Education</p>
+          <p className="mt-4 text-xl font-black leading-tight text-white">{education.university}</p>
+          <p className="mt-2 text-base text-slate-300 sm:text-lg">{education.degree}</p>
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="rounded-xl border border-primary/15 bg-primary/[0.045] p-4">
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-slate-500">GPA</p>
+              <p className="mt-1 text-xl font-black text-secondary">{education.gpa}</p>
+            </div>
+            <div className="rounded-xl border border-primary/15 bg-primary/[0.045] p-4">
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-slate-500">Graduation</p>
+              <p className="mt-1 text-sm font-bold text-text-main">{education.graduation}</p>
+            </div>
+          </div>
+          <p className="mt-6 text-sm leading-relaxed text-slate-400">
+            Coursework and independent projects converge around applied AI, graph systems, and reliable full-stack products.
           </p>
         </motion.div>
 
-        {/* Right: Skills */}
-        <motion.div
-          initial={{ opacity: 0, x: 16 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="space-y-6"
-        >
+        <motion.div initial={{ opacity: 0, x: 14 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="min-w-0 space-y-7">
           {CATEGORY_ORDER.map((category) => {
-            const skills = skillsByCategory[category];
-            if (skills.length === 0) return null;
+            const categorySkills = skillsByCategory[category];
+            const visibleSkills = showAllSkills ? categorySkills : categorySkills.slice(0, DEFAULT_SKILLS_PER_CATEGORY);
             return (
               <div key={category}>
-                <h3 className="text-sm font-medium text-text-muted uppercase tracking-wider mb-3">
-                  {category}
-                </h3>
+                <h3 className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted sm:text-xs">{category}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1.5 text-sm border border-white/10 rounded-full text-text-main transition-all duration-200 hover:border-primary/40 hover:shadow-[0_0_12px_rgba(59,130,246,0.35)]"
-                    >
-                      {skill}
-                    </span>
+                  {visibleSkills.map((skill) => (
+                    <span key={skill} className="rounded-full border border-white/10 bg-white/[0.025] px-3 py-1.5 text-xs text-slate-200 transition-colors hover:border-primary/35 hover:bg-primary/[0.06] sm:text-sm">{skill}</span>
                   ))}
                 </div>
               </div>
             );
           })}
+          <button type="button" onClick={() => setShowAllSkills((visible) => !visible)} aria-expanded={showAllSkills} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 font-mono text-[10px] uppercase tracking-[0.16em] text-slate-300 transition-colors hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            {showAllSkills ? "Show curated set" : `Show all ${education.skills.length} skills`}
+            <ChevronDown className={`transition-transform ${showAllSkills ? "rotate-180" : ""}`} size={15} />
+          </button>
         </motion.div>
       </div>
 
-      {/* Challenge button */}
       {battleState === "idle" && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-20 flex justify-center w-full"
-        >
-          <button
-            onClick={() => setBattleState("selecting")}
-            className="px-12 py-5 bg-red-500/20 border-2 border-red-500/80 text-white text-xl md:text-2xl font-bold rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:bg-red-500 hover:shadow-[0_0_40px_rgba(239,68,68,0.9)] backdrop-blur-md transition-all uppercase tracking-widest w-full max-w-4xl"
-          >
-            ⚔ Challenge the Leader
+        <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-16 rounded-2xl border border-red-400/20 bg-[radial-gradient(circle_at_50%_120%,rgba(239,68,68,0.16),transparent_55%)] p-5 text-center sm:mt-20 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-red-300/70">Optional final encounter</p>
+          <h3 className="mt-2 text-xl font-black text-white sm:text-2xl">Think you have what it takes?</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-slate-400">Choose a trainer and partner for a short, fully optional battle. All portfolio links remain available without it.</p>
+          <button ref={challengeRef} type="button" onClick={() => setBattleState("selecting")} className="mt-6 inline-flex min-h-14 w-full max-w-2xl items-center justify-center gap-3 rounded-xl border-2 border-red-400/70 bg-red-500/15 px-6 text-sm font-black uppercase tracking-[0.15em] text-white shadow-[0_0_24px_rgba(239,68,68,0.18)] transition-all hover:bg-red-500 hover:shadow-[0_0_38px_rgba(239,68,68,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400">
+            <Swords size={20} /> Challenge the leader
           </button>
         </motion.div>
       )}
 
-      {/* Post-battle reveal */}
-      {battleState === "defeated" && (
+      {battleState === "defeated" && selectedTrainer && selectedPokemon && (
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          ref={rewardRef}
+          tabIndex={-1}
+          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mt-32 p-8 rounded-xl bg-surface/80 border-2 border-primary/50 shadow-[0_0_30px_rgba(0,210,255,0.15)] max-w-4xl mx-auto backdrop-blur-md relative overflow-hidden"
+          className="mt-20 scroll-mt-24 outline-none"
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
-
-          <p className="text-xl md:text-2xl font-mono text-white leading-relaxed">
-            <span className="text-primary font-bold">Gym Leader Simon:</span>{" "}
-            "You've successfully navigated the currents of my portfolio. Your skills are sharp,
-            and your problem-solving flows like water. For proving your technical prowess,
-            I present to you..."
-          </p>
-
-          <div className="mt-12 flex flex-col items-center justify-center">
-            <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 10, delay: 0.4 }}
-            >
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: 20 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-secondary shadow-[0_0_40px_rgba(0,210,255,0.6)] flex items-center justify-center border-4 border-white/80 cursor-pointer"
-              >
-                <span className="text-6xl drop-shadow-[0_0_10px_rgba(255,255,255,1)]">💧</span>
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-              className="mt-4 text-center w-full"
-            >
-              <p className="text-2xl font-bold text-white tracking-widest uppercase drop-shadow-[0_0_8px_rgba(0,210,255,0.8)]">
-                The Tensor Badge
-              </p>
-              <p className="text-text-muted mt-2 font-mono">
-                Proof of conquering the Neural Water Gym
-              </p>
-
-              <div className="mt-12 grid grid-cols-2 gap-4 max-w-lg mx-auto">
-                <a
-                  href={LINKEDIN_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 rounded-lg border border-white/20 bg-surface/40 p-4 text-left transition-all hover:bg-primary/10 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(0,210,255,0.6)] backdrop-blur-md"
-                >
-                  <Linkedin className="w-5 h-5 text-white/50 group-hover:text-primary transition-colors" />
-                  <span className="font-bold text-white uppercase tracking-wider">LinkedIn</span>
-                </a>
-                <a
-                  href={GITHUB_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 rounded-lg border border-white/20 bg-surface/40 p-4 text-left transition-all hover:bg-primary/10 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(0,210,255,0.6)] backdrop-blur-md"
-                >
-                  <Github className="w-5 h-5 text-white/50 group-hover:text-primary transition-colors" />
-                  <span className="font-bold text-white uppercase tracking-wider">GitHub</span>
-                </a>
-                <a
-                  href="/Resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 rounded-lg border border-white/20 bg-surface/40 p-4 text-left transition-all hover:bg-primary/10 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(0,210,255,0.6)] backdrop-blur-md"
-                >
-                  <FileText className="w-5 h-5 text-white/50 group-hover:text-primary transition-colors" />
-                  <span className="font-bold text-white uppercase tracking-wider">Resume</span>
-                </a>
-                <button
-                  onClick={handleCopyEmail}
-                  className="group flex items-center gap-3 relative rounded-lg border border-white/20 bg-surface/40 p-4 text-left transition-all hover:bg-primary/10 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(0,210,255,0.6)] backdrop-blur-md"
-                >
-                  <Mail className="w-5 h-5 text-white/50 group-hover:text-primary transition-colors" />
-                  <span className="font-bold text-white uppercase tracking-wider">
-                    {emailCopied ? "Copied!" : "Email"}
-                  </span>
-                  <AnimatePresence>
-                    {emailCopied && (
-                      <motion.span
-                        initial={{ opacity: 0, y: -6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute -top-7 left-1/2 -translate-x-1/2 text-xs font-mono text-green-400 whitespace-nowrap"
-                      >
-                        simonomillan15@gmail.com
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </button>
+          <div className="flex flex-col gap-5 rounded-2xl border border-primary/35 bg-[radial-gradient(circle_at_10%_50%,rgba(0,210,255,0.12),transparent_34%),#071526] p-5 shadow-[0_0_28px_rgba(0,210,255,0.1)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
+            <div className="flex min-w-0 items-center gap-4">
+              <div className="grid size-16 shrink-0 place-items-center rounded-full border-2 border-white/70 bg-gradient-to-br from-cyan-100 via-primary to-blue-600 shadow-[0_0_24px_rgba(0,210,255,0.4)]">
+                <Droplet className="size-8 fill-white/30 text-white" strokeWidth={2.3} />
               </div>
-            </motion.div>
+              <div className="min-w-0">
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-primary">Neural Water Gym // Complete</p>
+                <h3 className="mt-1 text-xl font-black text-white">Tensor Badge earned</h3>
+                <p className="mt-1 break-words text-sm text-slate-400">{selectedTrainer.name} + {selectedPokemon.name} · {selectedPokemon.move}</p>
+              </div>
+            </div>
+            <button type="button" onClick={replayBattle} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 text-sm font-bold text-white transition-colors hover:border-primary/35 hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><RotateCcw size={17} /> Battle again</button>
           </div>
         </motion.div>
       )}

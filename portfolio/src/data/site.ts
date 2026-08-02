@@ -4,7 +4,8 @@
 
 export const hero = {
   name: "Simon Ocampo Millan",
-  subheadline: "Teaching Assistant @  UCF CECS · Computer Science @ UCF",
+  eyebrow: "Gym Leader // Full-stack + AI systems",
+  subheadline: "Teaching Assistant @ UCF CECS · Computer Science @ UCF",
   ctaWork: "View Work",
   ctaResume: "Resume",
   ctaWorkHref: "#projects",
@@ -13,7 +14,7 @@ export const hero = {
 
 export const metadata = {
   title: "Neural Water Gym | Simon Ocampo Millan | Portfolio",
-  description: "Teaching Assistant @  UCF CECS · Computer Science @ UCF",
+  description: "Teaching Assistant @ UCF CECS · Computer Science @ UCF",
 } as const;
 
 export const sectionTitles = {

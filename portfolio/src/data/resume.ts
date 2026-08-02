@@ -137,7 +137,7 @@ export const experience: Experience[] = [
     bullets: [
       "Automated legal compliance by building reusable contract templates with dynamic placeholders in Odoo ERP.",
       "Standardized documentation workflows across 30+ branches, reducing processing delays and compliance errors.",
-      "upported daily operations for 100+ staff by improving reliability of internal document and approval systems.",
+      "Supported daily operations for 100+ staff by improving reliability of internal document and approval systems.",
     ],
   },
 ];

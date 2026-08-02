@@ -1,161 +1,34 @@
-"use client";
+import type { CSSProperties } from "react";
 
-import { type CSSProperties, useEffect, useState } from "react";
-
-const POKEMON_IDS = [
-  7, 55, 60, 72, 116, 131, 134, 158, 170, 183, 194, 226, 245, 258, 283,
-  320, 363, 382, 393, 490, 501, 515, 535, 564, 580,
-];
-
-const POKEMON_SPRITES = POKEMON_IDS.map(
-  (id) =>
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`
-);
-
-const PARTICLE_COUNT = 8;
-
-interface Particle {
-  id: number;
-  x: number;
-  y: number;
-  endX: number;
-  sway: number;
-  duration: number;
-  delay: number;
-  swayDuration: number;
-  sprite: string;
-  size: number;
-  opacity: number;
-  hueRotate: number;
-}
-
-function randomBetween(min: number, max: number) {
-  return min + Math.random() * (max - min);
-}
-
-function shuffle<T>(items: T[]) {
-  const copy = [...items];
-
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-
-  return copy;
-}
-
-function createParticles(width: number, height: number): Particle[] {
-  return shuffle(POKEMON_SPRITES)
-    .slice(0, PARTICLE_COUNT)
-    .map((sprite, index) => ({
-      id: index,
-      x: randomBetween(-40, width + 40),
-      y: randomBetween(height + 60, height + 320),
-      endX: randomBetween(-120, 120),
-      sway: randomBetween(18, 72) * (Math.random() > 0.5 ? 1 : -1),
-      duration: randomBetween(24, 38),
-      delay: randomBetween(-30, 0),
-      swayDuration: randomBetween(4.5, 8),
-      sprite,
-      size: randomBetween(40, 74),
-      opacity: randomBetween(0.32, 0.72),
-      hueRotate: randomBetween(-12, 16),
-    }));
-}
+const MOTES = [
+  { left: "3%", top: "18%", size: 7, delay: -2, duration: 10 },
+  { left: "8%", top: "68%", size: 4, delay: -7, duration: 13 },
+  { left: "15%", top: "88%", size: 5, delay: -4, duration: 11 },
+  { left: "86%", top: "22%", size: 5, delay: -8, duration: 12 },
+  { left: "93%", top: "58%", size: 8, delay: -5, duration: 14 },
+  { left: "82%", top: "84%", size: 4, delay: -1, duration: 9 },
+] as const;
 
 export default function GraphBackground() {
-  const [particles, setParticles] = useState<Particle[]>([]);
-
-  useEffect(() => {
-    let resizeTimer: number | undefined;
-
-    const syncParticles = () => {
-      setParticles(createParticles(window.innerWidth, window.innerHeight));
-    };
-
-    const handleResize = () => {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(syncParticles, 120);
-    };
-
-    syncParticles();
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.clearTimeout(resizeTimer);
-    };
-  }, []);
-
   return (
-    <>
-      <div
-        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-        aria-hidden
-      >
-        {particles.map((particle) => {
-          const riseStyle = {
-            "--sprite-x": `${particle.x}px`,
-            "--sprite-y": `${particle.y}px`,
-            "--sprite-end-x": `${particle.endX}px`,
-            animation: `water-sprite-rise ${particle.duration}s linear ${particle.delay}s infinite`,
-          } as CSSProperties;
-
-          const swayStyle = {
-            "--sprite-drift": `${particle.sway}px`,
-            animation: `water-sprite-sway ${particle.swayDuration}s ease-in-out ${particle.delay}s infinite alternate`,
-          } as CSSProperties;
-
-          return (
-            <div
-              key={particle.id}
-              className="absolute left-0 top-0 will-change-transform"
-              style={riseStyle}
-            >
-              <div className="will-change-transform" style={swayStyle}>
-                <img
-                  src={particle.sprite}
-                  alt=""
-                  decoding="async"
-                  className="block object-contain"
-                  style={{
-                    width: particle.size,
-                    opacity: particle.opacity,
-                    imageRendering: "pixelated",
-                    filter: `drop-shadow(0 0 14px rgba(0,210,255,0.75)) drop-shadow(0 0 6px rgba(255,255,255,0.28)) hue-rotate(${particle.hueRotate}deg)`,
-                  }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <style jsx>{`
-        @keyframes water-sprite-rise {
-          from {
-            transform: translate3d(var(--sprite-x), var(--sprite-y), 0);
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_20%,rgba(0,210,255,0.07),transparent_24%),radial-gradient(circle_at_88%_78%,rgba(58,134,255,0.08),transparent_28%)]" />
+      {MOTES.map((mote, index) => (
+        <div
+          key={`${mote.left}-${mote.top}`}
+          className={`ambient-mote absolute rounded-[2px] border border-primary/35 bg-primary/15 shadow-[0_0_14px_rgba(0,210,255,0.5)] ${index > 3 ? "hidden sm:block" : ""}`}
+          style={
+            {
+              left: mote.left,
+              top: mote.top,
+              width: mote.size,
+              height: mote.size,
+              "--mote-delay": `${mote.delay}s`,
+              "--mote-duration": `${mote.duration}s`,
+            } as CSSProperties
           }
-
-          to {
-            transform: translate3d(
-              calc(var(--sprite-x) + var(--sprite-end-x)),
-              -140px,
-              0
-            );
-          }
-        }
-
-        @keyframes water-sprite-sway {
-          from {
-            transform: translateX(calc(var(--sprite-drift) * -0.5));
-          }
-
-          to {
-            transform: translateX(calc(var(--sprite-drift) * 0.5));
-          }
-        }
-      `}</style>
-    </>
+        />
+      ))}
+    </div>
   );
 }

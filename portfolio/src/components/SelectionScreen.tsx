@@ -3,34 +3,19 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-
-export interface Trainer {
-  name: string;
-  sprite: string;
-}
-
-export interface Pokemon {
-  id: number;
-  name: string;
-  move: string;
-  type: "water" | "grass" | "fire";
-}
-
-const TRAINERS: Trainer[] = [
-  { name: "Alex", sprite: "/trainers/male-trainer.png" },
-  { name: "Vera", sprite: "/trainers/female-trainer.png" },
-];
-
-const POKEMON: Pokemon[] = [
-  { id: 9, name: "Blastoise", move: "Hydro Pump", type: "water" },
-  { id: 254, name: "Sceptile", move: "Leaf Blade", type: "grass" },
-  { id: 500, name: "Emboar", move: "Flamethrower", type: "fire" },
-];
+import { ArrowLeft, Swords } from "lucide-react";
+import FullscreenDialog from "@/components/FullscreenDialog";
+import {
+  POKEMON,
+  TRAINERS,
+  type Pokemon,
+  type Trainer,
+} from "@/data/battle";
 
 const MOVE_COLORS = {
-  water: "font-bold text-cyan-400",
-  grass: "font-bold text-green-400",
-  fire: "font-bold text-orange-500",
+  water: "text-cyan-300",
+  grass: "text-green-300",
+  fire: "text-orange-300",
 };
 
 interface SelectionScreenProps {
@@ -38,125 +23,128 @@ interface SelectionScreenProps {
   onStart: (trainer: Trainer, pokemon: Pokemon) => void;
 }
 
-export default function SelectionScreen({
-  onCancel,
-  onStart,
-}: SelectionScreenProps) {
+export default function SelectionScreen({ onCancel, onStart }: SelectionScreenProps) {
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null);
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+  const canStart = Boolean(selectedTrainer && selectedPokemon);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="absolute inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/90 p-4 pt-16 backdrop-blur-sm md:pt-24"
+    <FullscreenDialog
+      onClose={onCancel}
+      labelledBy="selection-title"
+      className="bg-[#02070d]"
+      contentClassName="h-full overflow-y-auto overscroll-contain px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-4"
+      showBackdrop={false}
     >
-      <div className="mb-8 w-full max-w-4xl rounded-2xl border-2 border-primary/50 bg-neutral-900/80 p-8 shadow-[0_0_40px_rgba(0,210,255,0.2)]">
-        <div className="mb-12">
-          <h2 className="mb-6 text-center font-mono text-2xl font-bold uppercase tracking-widest text-white drop-shadow-[0_0_8px_rgba(0,210,255,0.8)]">
-            Step 1: Choose Your Trainer
-          </h2>
-          <div className="mx-auto grid max-w-lg grid-cols-2 gap-6">
-            {TRAINERS.map((trainer) => (
-              <button
-                key={trainer.name}
-                onClick={() => setSelectedTrainer(trainer)}
-                className={`flex flex-col items-center gap-4 rounded-xl border-2 bg-neutral-800 p-6 transition-all duration-300 ${
-                  selectedTrainer?.name === trainer.name
-                    ? "scale-105 border-primary shadow-[0_0_20px_rgba(0,210,255,0.5)]"
-                    : "border-white/10 hover:border-white/30 hover:bg-neutral-700"
-                }`}
-              >
-                <div className="relative h-32 w-32">
-                  <Image
-                    src={trainer.sprite}
-                    alt={trainer.name}
-                    fill
-                    quality={100}
-                    className="object-contain"
-                    style={{ imageRendering: "pixelated" }}
-                  />
-                </div>
-                <span className="text-lg font-bold text-white">
-                  {trainer.name}
-                </span>
-              </button>
-            ))}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.985 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="mx-auto flex min-h-full w-full max-w-4xl items-start justify-center sm:py-6"
+      >
+        <div className="w-full overflow-hidden rounded-2xl border border-primary/45 bg-[#07111d]/96 shadow-[0_0_44px_rgba(0,210,255,0.14)]">
+          <header className="border-b border-white/10 px-4 py-4 text-center sm:px-8 sm:py-6">
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary/65">Final encounter setup</p>
+            <h2 id="selection-title" className="mt-1 text-xl font-black uppercase tracking-[0.1em] text-white sm:text-2xl">
+              Choose your team
+            </h2>
+          </header>
+
+          <div className="space-y-8 p-4 sm:space-y-10 sm:p-8">
+            <fieldset>
+              <legend className="mb-4 w-full text-center font-mono text-xs font-bold uppercase tracking-[0.18em] text-white sm:text-sm">
+                <span className="text-primary">01</span> / Choose your trainer
+              </legend>
+              <div className="mx-auto grid max-w-2xl grid-cols-2 gap-3 sm:gap-5" role="radiogroup" aria-label="Trainer">
+                {TRAINERS.map((trainer) => {
+                  const selected = selectedTrainer?.name === trainer.name;
+                  return (
+                    <button
+                      key={trainer.name}
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      onClick={() => setSelectedTrainer(trainer)}
+                      className={`relative flex min-h-48 min-w-0 flex-col items-center justify-end gap-2 overflow-hidden rounded-xl border bg-white/[0.035] p-3 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:min-h-60 sm:gap-3 sm:p-5 ${
+                        selected
+                          ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(0,210,255,0.2)]"
+                          : "border-white/10 hover:border-white/25 hover:bg-white/[0.055]"
+                      }`}
+                    >
+                      <span aria-hidden className={`absolute inset-x-6 bottom-9 h-12 rounded-[50%] bg-primary/10 blur-xl transition-opacity ${selected ? "opacity-100" : "opacity-35"}`} />
+                      <span className="relative block size-36 sm:size-44">
+                        <Image
+                          src={trainer.animatedSprite}
+                          alt=""
+                          fill
+                          sizes="(max-width: 640px) 144px, 176px"
+                          unoptimized
+                          className="object-contain drop-shadow-[0_0_18px_rgba(0,210,255,0.25)]"
+                          style={{ imageRendering: "pixelated" }}
+                        />
+                      </span>
+                      <span className="text-sm font-bold text-white sm:text-base">{trainer.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <fieldset disabled={!selectedTrainer} className="disabled:pointer-events-none">
+              <legend className={`mb-4 w-full text-center font-mono text-xs font-bold uppercase tracking-[0.18em] transition-colors sm:text-sm ${selectedTrainer ? "text-white" : "text-slate-600"}`}>
+                <span className={selectedTrainer ? "text-primary" : "text-slate-700"}>02</span> / Choose your partner
+              </legend>
+              <div className={`grid grid-cols-3 gap-2 transition-all sm:gap-4 ${selectedTrainer ? "opacity-100" : "opacity-25 grayscale"}`} role="radiogroup" aria-label="Partner Pokémon">
+                {POKEMON.map((pokemon) => {
+                  const selected = selectedPokemon?.name === pokemon.name;
+                  return (
+                    <button
+                      key={pokemon.name}
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      onClick={() => setSelectedPokemon(pokemon)}
+                      className={`flex min-w-0 flex-col items-center gap-2 rounded-xl border bg-white/[0.035] px-1.5 py-3 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-4 sm:py-5 ${
+                        selected
+                          ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(0,210,255,0.2)]"
+                          : "border-white/10 hover:border-white/25 hover:bg-white/[0.055]"
+                      }`}
+                    >
+                      <Image
+                        src={pokemon.frontSprite}
+                        alt=""
+                        width={80}
+                        height={80}
+                        unoptimized
+                        className="h-14 w-auto max-w-full object-contain sm:h-20"
+                        style={{ imageRendering: "pixelated" }}
+                      />
+                      <span className="max-w-full break-words text-center text-[11px] font-bold text-white sm:text-sm">{pokemon.name}</span>
+                      <span className={`max-w-full break-words text-center font-mono text-[8px] font-bold leading-tight sm:text-xs ${MOVE_COLORS[pokemon.moveType]}`}>
+                        {pokemon.move}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+
           </div>
-        </div>
 
-        <div className="mb-12">
-          <h2
-            className={`mb-6 text-center font-mono text-2xl font-bold uppercase tracking-widest transition-opacity duration-300 ${
-              selectedTrainer
-                ? "text-white opacity-100 drop-shadow-[0_0_8px_rgba(0,210,255,0.8)]"
-                : "text-zinc-600 opacity-50"
-            }`}
-          >
-            Step 2: Choose Your Partner
-          </h2>
-          <div
-            className={`flex flex-wrap justify-center gap-6 transition-all duration-500 ${
-              !selectedTrainer
-                ? "pointer-events-none opacity-40 grayscale blur-sm"
-                : "pointer-events-auto opacity-100 grayscale-0 blur-none"
-            }`}
-          >
-            {POKEMON.map((pokemon) => (
-              <button
-                key={pokemon.name}
-                disabled={!selectedTrainer}
-                onClick={() => setSelectedPokemon(pokemon)}
-                className={`group flex w-48 flex-col items-center gap-3 rounded-xl border-2 bg-neutral-800 p-6 transition-all duration-300 ${
-                  selectedPokemon?.name === pokemon.name
-                    ? "scale-105 border-primary shadow-[0_0_20px_rgba(0,210,255,0.5)]"
-                    : "border-white/10 hover:border-white/30 hover:bg-neutral-700"
-                }`}
-              >
-                <img
-                  src={`https://play.pokemonshowdown.com/sprites/gen5ani/${pokemon.name.toLowerCase()}.gif`}
-                  alt={pokemon.name}
-                  className="h-20 object-contain"
-                  style={{ imageRendering: "pixelated" }}
-                />
-                <div className="text-center">
-                  <div className="font-bold text-white">{pokemon.name}</div>
-                  <div className="mt-1 text-xs text-text-muted">Moveset:</div>
-                  <div className={`mt-0.5 text-sm ${MOVE_COLORS[pokemon.type]}`}>
-                    {pokemon.move}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
+          <footer className="sticky bottom-0 flex flex-col-reverse gap-2 border-t border-white/10 bg-[#07111d]/95 p-3 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <button type="button" onClick={onCancel} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold text-slate-400 hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              <ArrowLeft size={17} /> Cancel
+            </button>
+            <button
+              type="button"
+              disabled={!canStart}
+              onClick={() => selectedTrainer && selectedPokemon && onStart(selectedTrainer, selectedPokemon)}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-red-400/70 bg-red-500/15 px-6 text-sm font-black uppercase tracking-[0.13em] text-white shadow-[0_0_20px_rgba(239,68,68,0.16)] transition-all hover:bg-red-500 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-slate-600 disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+            >
+              <Swords size={18} /> Begin battle
+            </button>
+          </footer>
         </div>
-
-        <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
-          <button
-            onClick={onCancel}
-            className="px-6 py-2 text-white/70 transition-colors hover:text-white"
-          >
-            Cancel
-          </button>
-
-          <button
-            onClick={() =>
-              selectedTrainer &&
-              selectedPokemon &&
-              onStart(selectedTrainer, selectedPokemon)
-            }
-            disabled={!selectedTrainer || !selectedPokemon}
-            className={`rounded-lg px-8 py-3 font-bold uppercase tracking-widest transition-all duration-300 ${
-              selectedTrainer && selectedPokemon
-                ? "border border-red-500 bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.6)] hover:scale-105 hover:bg-red-500"
-                : "cursor-not-allowed border border-neutral-700 bg-neutral-800 text-neutral-500"
-            }`}
-          >
-            BEGIN BATTLE &gt;
-          </button>
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </FullscreenDialog>
   );
 }

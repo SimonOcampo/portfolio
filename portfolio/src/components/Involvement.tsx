@@ -7,17 +7,18 @@ import { sectionTitles } from "@/data/site";
 
 export default function Involvement() {
   return (
-    <section className="px-6 py-24 max-w-7xl mx-auto">
-      <motion.h2
+    <section aria-labelledby="involvement-heading" className="mx-auto w-full min-w-0 max-w-7xl px-5 py-14 sm:px-8 md:py-20 lg:px-12">
+      <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="mb-12 text-3xl font-bold text-primary flex items-center gap-3"
+        className="mb-8 sm:mb-12"
       >
-        {sectionTitles.involvement.title}
-      </motion.h2>
+        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.28em] text-secondary sm:text-xs">03 / Involvement</p>
+        <h2 id="involvement-heading" className="text-3xl font-black tracking-tight text-primary sm:text-4xl">{sectionTitles.involvement.title}</h2>
+      </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-7">
         {involvement.map((item, i) => (
           <motion.div
             key={item.org}
@@ -26,7 +27,7 @@ export default function Involvement() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
           >
-            <SpotlightCard className="h-full p-8 rounded-2xl">
+            <SpotlightCard className="h-full rounded-2xl p-5 sm:p-7 lg:p-8">
               <h3 className="text-xl font-bold text-secondary">{item.org}</h3>
               <p className="mt-1 text-lg font-medium text-white">{item.role}</p>
               <p className="mt-1 text-sm text-text-muted">
