@@ -27,7 +27,7 @@ const SKILL_CATEGORIES: Record<string, SkillCategory> = {
   Pandas: "Frameworks", NumPy: "Frameworks", matplotlib: "Frameworks", Seaborn: "Frameworks",
   Streamlit: "Frameworks", TailwindCSS: "Frameworks", "Material UI": "Frameworks", SQLAlchemy: "Frameworks",
   PuLP: "Frameworks", "Git/GitHub": "Tools", AWS: "Tools", Docker: "Tools", PostgreSQL: "Tools",
-  Redis: "Tools", SQLite: "Tools", "Gemini API": "Tools", "OpenAI APIs": "Tools", "Hugging Face": "Tools",
+  Supabase: "Tools", Redis: "Tools", SQLite: "Tools", "Gemini API": "Tools", "OpenAI APIs": "Tools", "Hugging Face": "Tools",
   Auth0: "Tools", Apify: "Tools", SerpApi: "Tools", "Yelp Fusion API": "Tools", BeautifulSoup: "Tools",
   "REST APIs": "Tools", GoHighLevel: "Tools", Make: "Tools", Odoo: "Tools",
 };

@@ -28,7 +28,7 @@ export interface ResumeProject {
 
 export interface Involvement {
   org: string;
-  role: string;
+  role?: string;
   startDate: string;
   endDate: string;
   bullets: string[];
@@ -42,7 +42,7 @@ export const education: Education = {
   university: "University of Central Florida",
   degree: "B.S. in Computer Science",
   graduation: "May 2027",
-  gpa: 3.8,
+  gpa: 3.84,
   skills: [
     "Python",
     "Java",
@@ -71,6 +71,7 @@ export const education: Education = {
     "Git/GitHub",
     "Docker",
     "PostgreSQL",
+    "Supabase",
     "Redis",
     "SQLite",
     "AWS",
@@ -96,8 +97,19 @@ export const education: Education = {
 
 export const experience: Experience[] = [
   {
-    company: "UCF CECS",
-    title: "Teaching Assistant for Dr. Mahfuz Rahman",
+    company: "Dexter",
+    title: "Junior AI Solutions Developer",
+    startDate: "June 2026",
+    endDate: "Present",
+    bullets: [
+      "Developed full-stack web applications using React and Supabase, cutting manual data entry by 45%.",
+      "Built secure asynchronous extraction pipelines with Edge Functions, reducing document latency by 60%.",
+      "Implemented PostgreSQL RLS and RBAC policies, securing multi-tenant data with 100% isolation.",
+    ],
+  },
+  {
+    company: "University of Central Florida",
+    title: "Teaching Assistant",
     startDate: "Aug 2025",
     endDate: "Aug 2026",
     bullets: [
@@ -108,7 +120,7 @@ export const experience: Experience[] = [
   },
   {
     company: "SimX AI",
-    title: "Founder",
+    title: "ML Engineer",
     startDate: "Jul 2025",
     endDate: "Dec 2025",
     bullets: [
@@ -119,19 +131,8 @@ export const experience: Experience[] = [
     ],
   },
   {
-    company: "Vivint Smart Home",
-    title: "Sales Representative",
-    startDate: "May 2025",
-    endDate: "Jul 2025",
-    bullets: [
-      "Generated $60,000+ in revenue within two months by pitching tailored smart home solutions to residential clients.",
-      "Achieved a 40% close rate, consistently converting cold leads into signed contracts on the first interaction.",
-      "Supported community service by funding meals for 250 children through Vivint Gives Back",
-    ],
-  },
-  {
     company: "Pactemos",
-    title: "Software Engineering Intern",
+    title: "Software Engineer",
     startDate: "Dec 2024",
     endDate: "Jan 2025",
     bullets: [
@@ -149,23 +150,20 @@ export const experience: Experience[] = [
 export const involvement: Involvement[] = [
   {
     org: "Theta Tau",
-    role: "Web Dev Committee · Community Service, Academic, and Athletic Boards",
     startDate: "Nov 2025",
     endDate: "Present",
     bullets: [
-      "Developed brother-to-brother support request web system, improving response times by 40%",
-      "Built backend infrastructure to handle and organize requests, track progress, and manage brotherly support",
-      "Organized and participated in community service events, including park cleanups and food drives."
+      "Contributed to service initiatives including campus cleanups and volunteer drives that reinforce leadership and teamwork.",
+      "Participated in networking sessions with industry professionals to explore career paths across multiple engineering disciplines.",
     ],
   },
   {
     org: "Tau Beta Pi",
-    role: "Recruitment Chair",
     startDate: "Nov 2024",
     endDate: "Present",
     bullets: [
-      "Initiated into Tau Beta Pi (top 12.5% of engineering students) for academic excellence.",
-      "Recruit and onboard new members through engaging activities and outreach events, increasing chapter membership by 15%.",
+      "Initiated into Tau Beta Pi, the nation’s oldest engineering honor society, recognizing the top 12.5% of engineering students.",
+      "Guided candidates through initiation requirements, mentorship events, and professional development opportunities.",
     ],
   },
 ];

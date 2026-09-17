@@ -29,7 +29,6 @@ export default function Involvement() {
           >
             <SpotlightCard className="h-full rounded-2xl p-5 sm:p-7 lg:p-8">
               <h3 className="text-xl font-bold text-secondary">{item.org}</h3>
-              <p className="mt-1 text-lg font-medium text-white">{item.role}</p>
               <p className="mt-1 text-sm text-text-muted">
                 {item.startDate} – {item.endDate}
               </p>
