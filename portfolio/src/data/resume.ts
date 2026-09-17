@@ -108,8 +108,8 @@ export const experience: Experience[] = [
     ],
   },
   {
-    company: "University of Central Florida",
-    title: "Teaching Assistant",
+    company: "UCF CECS",
+    title: "Teaching Assistant for Dr. Mahfuz Rahman",
     startDate: "Aug 2025",
     endDate: "Aug 2026",
     bullets: [
@@ -120,7 +120,7 @@ export const experience: Experience[] = [
   },
   {
     company: "SimX AI",
-    title: "ML Engineer",
+    title: "Founder",
     startDate: "Jul 2025",
     endDate: "Dec 2025",
     bullets: [
@@ -131,8 +131,19 @@ export const experience: Experience[] = [
     ],
   },
   {
+    company: "Vivint Smart Home",
+    title: "Sales Representative",
+    startDate: "May 2025",
+    endDate: "Jul 2025",
+    bullets: [
+      "Generated $60,000+ in revenue within two months by pitching tailored smart home solutions to residential clients.",
+      "Achieved a 40% close rate, consistently converting cold leads into signed contracts on the first interaction.",
+      "Supported community service by funding meals for 250 children through Vivint Gives Back",
+    ],
+  },
+  {
     company: "Pactemos",
-    title: "Software Engineer",
+    title: "Software Engineering Intern",
     startDate: "Dec 2024",
     endDate: "Jan 2025",
     bullets: [
@@ -153,8 +164,9 @@ export const involvement: Involvement[] = [
     startDate: "Nov 2025",
     endDate: "Present",
     bullets: [
-      "Contributed to service initiatives including campus cleanups and volunteer drives that reinforce leadership and teamwork.",
-      "Participated in networking sessions with industry professionals to explore career paths across multiple engineering disciplines.",
+      "Developed brother-to-brother support request web system, improving response times by 40%",
+      "Built backend infrastructure to handle and organize requests, track progress, and manage brotherly support",
+      "Organized and participated in community service events, including park cleanups and food drives.",
     ],
   },
   {
@@ -162,8 +174,8 @@ export const involvement: Involvement[] = [
     startDate: "Nov 2024",
     endDate: "Present",
     bullets: [
-      "Initiated into Tau Beta Pi, the nation’s oldest engineering honor society, recognizing the top 12.5% of engineering students.",
-      "Guided candidates through initiation requirements, mentorship events, and professional development opportunities.",
+      "Initiated into Tau Beta Pi (top 12.5% of engineering students) for academic excellence.",
+      "Recruit and onboard new members through engaging activities and outreach events, increasing chapter membership by 15%.",
     ],
   },
 ];
