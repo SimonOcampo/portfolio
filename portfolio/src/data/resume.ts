@@ -120,7 +120,7 @@ export const experience: Experience[] = [
   },
   {
     company: "SimX AI",
-    title: "Founder",
+    title: "ML Engineer",
     startDate: "Jul 2025",
     endDate: "Dec 2025",
     bullets: [
@@ -143,7 +143,7 @@ export const experience: Experience[] = [
   },
   {
     company: "Pactemos",
-    title: "Software Engineering Intern",
+    title: "Software Engineer",
     startDate: "Dec 2024",
     endDate: "Jan 2025",
     bullets: [
