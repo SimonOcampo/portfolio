@@ -19,7 +19,7 @@ export default function Projects() {
         <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.28em] text-secondary sm:text-xs">01 / Projects</p>
         <h2 id="projects-heading" className="text-3xl font-black tracking-tight text-primary sm:text-4xl">{sectionTitles.projects.title}</h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
-          Five systems built where AI, full-stack engineering, and real-world workflows collide.
+          Six systems built where AI, full-stack engineering, and real-world workflows collide.
         </p>
       </motion.div>
 

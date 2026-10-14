@@ -100,7 +100,7 @@ export const experience: Experience[] = [
     company: "Dexter",
     title: "Junior AI Solutions Developer",
     startDate: "June 2026",
-    endDate: "Present",
+    endDate: "Oct 2026",
     bullets: [
       "Developed full-stack web applications using React and Supabase, cutting manual data entry by 45%.",
       "Built secure asynchronous extraction pipelines with Edge Functions, reducing document latency by 60%.",

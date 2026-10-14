@@ -26,12 +26,38 @@ export interface Project {
   media: ProjectMedia[];
   githubUrl?: string;
   liveUrl?: string;
+  devpostUrl?: string;
   featured?: boolean;
   trainerName: string;
   trainerClass: string;
 }
 
 export const projects: Project[] = [
+  {
+    id: "oddyssey",
+    title: "ODDyssey",
+    trainerClass: "Scientist",
+    trainerName: "Colress",
+    summary: "A public-data market screening and hypothetical fleet simulation platform for autonomous ride-hailing expansion.",
+    highlight: "2nd Place — Waymo Sponsored Track, ShellHacks 2026",
+    caseStudy: {
+      problem: "Autonomous ride-hailing expansion requires comparing cities across market familiarity, charging infrastructure, and potential demand with clear evidence behind each recommendation.",
+      approach: "Built a Next.js and FastAPI platform with shared Pydantic/OpenAPI contracts. A configurable ranking engine combines 15 features from Census ACS, TIGER/Line, NOAA, DOE AFDC, and Waymo public market data across Market Familiarity, Infrastructure Readiness, and Market Opportunity. Source provenance and deterministic backend scoring make rankings reproducible, while interactive maps and playback explain hypothetical fleet scenarios.",
+      outcomes: [
+        "Won 2nd Place in the Waymo Sponsored Track at ShellHacks 2026, built by a three-person team at FIU among 300+ submitted projects.",
+        "Made city rankings traceable to documented public sources, configurable weights, and explicit assumptions.",
+        "Simulates seven days of fleet operations with adjustable fleet size, demand, pricing, and operating assumptions, showing utilization, wait times, empty miles, charging, fares, and gross revenue.",
+        "Reproduces ranking and simulation results for the same data release, configuration, assumptions, and seed; outputs support market screening rather than predict Waymo expansion.",
+      ],
+    },
+    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Python", "FastAPI", "Pydantic", "OpenAPI", "Recharts", "D3 Geo", "Mapbox", "Vercel"],
+    media: [
+      { type: "image", src: "/projects/oddyssey-overview.jpg", alt: "ODDyssey home page introducing public-data screening for autonomous mobility expansion", position: "center" },
+    ],
+    githubUrl: "https://github.com/SimonOcampo/ShellHacks2026",
+    liveUrl: "https://odd-scout-web.vercel.app/",
+    devpostUrl: "https://devpost.com/software/oddyssey",
+  },
   {
     id: "procurement-decision-tool",
     title: "Procurement Decision Tool",

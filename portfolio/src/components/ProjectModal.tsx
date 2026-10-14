@@ -126,6 +126,11 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
                 <ExternalLink size={18} /> {projectModal.liveDemo}
               </a>
             )}
+            {selectedProject.devpostUrl && (
+              <a href={selectedProject.devpostUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 text-sm font-bold text-white transition-colors hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                <ExternalLink size={18} /> Devpost
+              </a>
+            )}
           </div>
         </div>
       </motion.article>
