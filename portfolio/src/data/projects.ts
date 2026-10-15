@@ -52,7 +52,7 @@ export const projects: Project[] = [
     },
     technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Python", "FastAPI", "Pydantic", "OpenAPI", "Recharts", "D3 Geo", "Mapbox", "Vercel"],
     media: [
-      { type: "image", src: "/projects/oddyssey-overview.jpg", alt: "ODDyssey home page introducing public-data screening for autonomous mobility expansion", position: "center" },
+      { type: "image", src: "/projects/oddyssey-overview.png", alt: "ODDyssey home page introducing public-data screening for autonomous mobility expansion", position: "center" },
     ],
     githubUrl: "https://github.com/SimonOcampo/ShellHacks2026",
     liveUrl: "https://odd-scout-web.vercel.app/",
