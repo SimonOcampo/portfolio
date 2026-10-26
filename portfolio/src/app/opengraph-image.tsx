@@ -44,13 +44,12 @@ export default function OpenGraphImage() {
         />
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", zIndex: 2 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 58, height: 58, border: "2px solid rgba(0,210,255,0.7)", borderRadius: 14, color: "#00D2FF", fontWeight: 800 }}>NW</div>
             <div style={{ display: "flex", fontSize: 20, letterSpacing: 7, textTransform: "uppercase", color: "#7DD3FC" }}>Neural Water Gym</div>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", fontSize: 86, lineHeight: 0.92, fontWeight: 900, letterSpacing: -5, color: "#E0F2FE" }}>Simon Ocampo</div>
             <div style={{ display: "flex", fontSize: 86, lineHeight: 0.92, fontWeight: 900, letterSpacing: -5, color: "#00D2FF" }}>Millan</div>
-            <div style={{ display: "flex", marginTop: 30, fontSize: 26, color: "#94A3B8" }}>Full-stack systems · Applied AI · Graph intelligence</div>
+            <div style={{ display: "flex", marginTop: 30, fontSize: 26, color: "#94A3B8" }}>Full-stack applications · Applied AI systems</div>
           </div>
           <div style={{ display: "flex", gap: 12 }}>
             {["Projects", "Experience", "Skills", "Final Battle"].map((label, index) => (

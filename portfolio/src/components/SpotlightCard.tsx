@@ -28,7 +28,7 @@ export default function SpotlightCard({ children, className }: SpotlightCardProp
       onMouseMove={handleMouseMove}
       className={twMerge(
         clsx(
-          "group relative overflow-hidden rounded-lg bg-surface/60 backdrop-blur-sm border border-primary/20 shadow-[0_4px_30px_rgba(0,210,255,0.05)]",
+          "group relative overflow-hidden rounded-lg bg-surface/60 md:backdrop-blur-sm border border-primary/20 md:shadow-[0_4px_30px_rgba(0,210,255,0.05)]",
           className
         )
       )}

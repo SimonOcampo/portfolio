@@ -15,7 +15,8 @@ export default function Involvement() {
         className="mb-8 sm:mb-12"
       >
         <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.28em] text-secondary sm:text-xs">03 / Involvement</p>
-        <h2 id="involvement-heading" className="text-3xl font-black tracking-tight text-primary sm:text-4xl">{sectionTitles.involvement.title}</h2>
+        <h2 id="involvement-heading" className="text-3xl font-black tracking-tight text-primary sm:text-4xl">Community & Involvement</h2>
+        <p className="mt-2 font-mono text-xs text-slate-400">{sectionTitles.involvement.title}</p>
       </motion.div>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-7">

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { Droplet, Feather, RotateCcw, SkipForward, Sparkles, X } from "lucide-react";
 import FullscreenDialog from "@/components/FullscreenDialog";
 import type { BattleEffectsMode, Pokemon, Trainer } from "@/data/battle";
@@ -368,7 +368,8 @@ export default function BattleScene({ onEarnBadge, onCancel, onReplay, trainer, 
       : { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, filter: "brightness(1)" };
 
   return (
-    <FullscreenDialog onClose={onCancel} ariaLabel="Gym Leader battle" showBackdrop={false} className="bg-black" contentClassName="h-full w-full overflow-hidden">
+    <MotionConfig reducedMotion="never">
+    <FullscreenDialog expressiveMotion onClose={onCancel} ariaLabel="Gym Leader battle" showBackdrop={false} className="bg-black" contentClassName="h-full w-full overflow-hidden">
       <div className="relative h-full w-full overflow-hidden bg-black" data-battle-phase={phase} data-effects-mode={effectsMode} data-badge-ready={badgeReady ? "true" : "false"}>
         {phase !== "badge" && <>
           <button type="button" onClick={onCancel} className="absolute left-[max(0.75rem,env(safe-area-inset-left))] top-[max(0.75rem,env(safe-area-inset-top))] z-[120] grid size-11 place-items-center rounded-full border border-white/15 bg-black/65 text-white/75 backdrop-blur transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Exit battle"><X size={20} /></button>
@@ -448,5 +449,6 @@ export default function BattleScene({ onEarnBadge, onCancel, onReplay, trainer, 
         {phase === "badge" && <BadgeCeremony trainer={trainer} pokemon={pokemon} cinematic={cinematic} ready={badgeReady} returnButtonRef={returnButtonRef} onReturn={() => onEarnBadge(trainer, pokemon)} onReplay={onReplay} />}
       </div>
     </FullscreenDialog>
+    </MotionConfig>
   );
 }

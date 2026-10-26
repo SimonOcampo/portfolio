@@ -11,9 +11,11 @@ interface CinematicImageProps {
   alignLeft?: boolean;
   imagePosition?: "left-top" | "center" | "top";
   eager?: boolean;
+  sizes?: string;
+  fit?: "cover" | "contain";
 }
 
-export default function CinematicImage({ src, alt, className, alignLeft, imagePosition, eager = false }: CinematicImageProps) {
+export default function CinematicImage({ src, alt, className, alignLeft, imagePosition, eager = false, sizes = "(max-width: 767px) calc(100vw - 80px), (max-width: 1279px) 30vw, 340px", fit = "contain" }: CinematicImageProps) {
   return (
     <div className={twMerge(clsx("group relative h-64 w-full overflow-hidden rounded-xl", className))}>
       <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(0,210,255,0.12),transparent_48%),linear-gradient(145deg,#071526,#030b14)]" />
@@ -21,9 +23,10 @@ export default function CinematicImage({ src, alt, className, alignLeft, imagePo
         src={src}
         alt={alt}
         fill
-        sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 760px"
+        sizes={sizes}
         className={clsx(
-          "z-10 object-cover drop-shadow-lg transition-transform duration-500 group-hover:scale-[1.025]",
+          "z-10 motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-[1.025]",
+          fit === "cover" ? "object-cover" : "object-contain",
           imagePosition === "left-top" && "object-left-top",
           imagePosition === "center" && "object-center",
           imagePosition === "top" && "object-top",

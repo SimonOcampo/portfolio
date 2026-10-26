@@ -21,6 +21,7 @@ interface FullscreenDialogProps {
   className?: string;
   contentClassName?: string;
   showBackdrop?: boolean;
+  expressiveMotion?: boolean;
 }
 
 export default function FullscreenDialog({
@@ -31,6 +32,7 @@ export default function FullscreenDialog({
   className,
   contentClassName,
   showBackdrop = true,
+  expressiveMotion = false,
 }: FullscreenDialogProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +97,7 @@ export default function FullscreenDialog({
       aria-modal="true"
       aria-labelledby={labelledBy}
       aria-label={ariaLabel}
+      data-expressive-motion={expressiveMotion || undefined}
       className={twMerge("fixed inset-0 z-[100] isolate", className)}
     >
       {showBackdrop && (
@@ -103,7 +106,7 @@ export default function FullscreenDialog({
           tabIndex={-1}
           aria-label="Close dialog"
           onClick={onClose}
-          className="absolute inset-0 size-full cursor-default bg-black/80 backdrop-blur-md"
+          className="absolute inset-0 size-full cursor-default bg-black/90 md:bg-black/80 md:backdrop-blur-md"
         />
       )}
       <div

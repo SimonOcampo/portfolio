@@ -1,10 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import localFont from "next/font/local";
 import "./globals.css";
 import { metadata as siteMetadata } from "@/data/site";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://simonocampo.com";
+
+const GeistSans = localFont({
+  src: "./fonts/Geist-Latin.woff2",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+  display: "optional",
+});
+
+const GeistMono = localFont({
+  src: "./fonts/GeistMono-Latin.woff2",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+  display: "optional",
+  preload: false,
+  adjustFontFallback: false,
+  fallback: ["ui-monospace", "Consolas", "monospace"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -12,10 +28,12 @@ export const metadata: Metadata = {
   description: siteMetadata.description,
   authors: [{ name: "Simon Ocampo Millan" }],
   creator: "Simon Ocampo Millan",
+  alternates: { canonical: "/" },
   openGraph: {
     title: siteMetadata.title,
     description: siteMetadata.description,
     type: "website",
+    url: "/",
   },
   twitter: {
     card: "summary_large_image",

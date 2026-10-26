@@ -18,10 +18,10 @@ Open [http://localhost:3000](http://localhost:3000). The site supports direct ch
 
 ## Environment
 
-Set `NEXT_PUBLIC_SITE_URL` to the production origin so generated Open Graph metadata resolves to the deployed domain.
+Metadata defaults to the verified public origin, `https://simonocampo.com`. Set `NEXT_PUBLIC_SITE_URL` only when deploying to a different intended public origin.
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://your-domain.example
+NEXT_PUBLIC_SITE_URL=https://simonocampo.com
 ```
 
 ## Quality checks
@@ -33,6 +33,12 @@ npm run build
 ```
 
 The optional battle launches with full Cinematic effects and keeps a subtle in-battle reduced-effects control available; core project, résumé, and contact links never require completing the game flow.
+
+## Fonts and verification
+
+Local Geist font subsets cover the portfolio's Latin text, punctuation, and arrows. Their original SIL license is included with the font files. After updating Geist, regenerate them with `python scripts/subset-fonts.py` in an environment with `fonttools` and `brotli` installed.
+
+See [the final polish verification report](docs/portfolio-polish.md) for measured performance, browser coverage, and remaining deployment work.
 
 ## Sprite credits
 

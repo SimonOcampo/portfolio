@@ -4,6 +4,7 @@ export type ProjectMedia =
       src: string;
       alt: string;
       position?: "left-top" | "center" | "top";
+      fit?: "cover" | "contain";
     }
   | {
       type: "video";
@@ -83,6 +84,35 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: "learnworld",
+    title: "LearnWorld",
+    trainerClass: "Schoolkid",
+    trainerName: "Cheren",
+    summary: "A gamified, offline-first CS learning platform turning PDFs and text into interactive algorithm simulations with state-aware Gemini tutoring.",
+    highlight: "32 CS skills powered by deterministic TypeScript engines",
+    caseStudy: {
+      problem: "Static slides and textbooks make it difficult to see how algorithms execute. Generic tutoring chatbots lack the exact inputs, variables, and execution state a student is exploring.",
+      approach: "Built a playable CS1/CS2 curriculum with Next.js, React, and deterministic TypeScript engines. Students assemble learning quests, change inputs, and step through algorithms while inspecting variables, memory, and event history. Gemini receives structured simulation snapshots for contextual tutoring, while the custom workshop converts PDFs and notes into Zod-validated lesson data without generating executable code. IndexedDB stores progress and custom skills locally.",
+      outcomes: [
+        "Provides 32 interactive CS skills covering pointers, memory allocation, trees, graphs, dynamic programming, and backtracking.",
+        "Grounds explanations, hints, summaries, and prediction challenges in the active simulation step and its variables.",
+        "Keeps XP, levels, streaks, achievements, and lesson history available offline, with JSON import and export for backups.",
+        "Turns PDFs and pasted notes into custom interactive lessons through schema-constrained Gemini output and Zod validation.",
+        "Verifies simulation behavior with Vitest and learning flows with Playwright and automated accessibility checks.",
+      ],
+    },
+    technologies: ["Next.js", "React", "TypeScript", "Gemini API", "IndexedDB", "Cytoscape.js", "Zod", "Tailwind CSS", "Vitest", "Playwright"],
+    media: [
+      { type: "image", src: "/projects/learnworld-curriculum.png", alt: "LearnWorld curriculum browser with CS skill selection and a learning quest queue", position: "center" },
+      { type: "image", src: "/projects/learnworld-graph.png", alt: "Graph algorithm simulation with live variables, pseudocode, an event trail, and a state-aware Gemini tutor", position: "center" },
+      { type: "image", src: "/projects/learnworld-bitwise.png", alt: "Bitwise operator simulation showing operand registers, step controls, and a prediction challenge", position: "center" },
+      { type: "image", src: "/projects/learnworld-backtracking.png", alt: "Backtracking simulation stepping through queen placements on a chessboard", position: "center" },
+      { type: "image", src: "/projects/learnworld-workshop.png", alt: "LearnWorld custom workshop turning uploaded PDFs and pasted material into interactive lessons", position: "center" },
+    ],
+    githubUrl: "https://github.com/SimonOcampo/learn_world",
+    devpostUrl: "https://devpost.com/software/learnworld",
+  },
+  {
     id: "knightlife-events",
     title: "KnightLife",
     trainerClass: "Club Leader",
@@ -112,12 +142,12 @@ export const projects: Project[] = [
     trainerClass: "Researcher",
     trainerName: "Aldrin",
     summary: "An inductive GraphSAGE pipeline for detecting laundering patterns in Bitcoin transaction graphs.",
-    highlight: "67.2% recall across a graph with 200k+ nodes",
+    highlight: "67.2% recall · 51.0% precision on 200K+ transactions",
     caseStudy: {
       problem: "Rules-based monitoring views transactions in isolation and misses structuring and layering patterns that emerge across connected accounts.",
       approach: "Engineered a two-hop GraphSAGE pipeline over the Elliptic dataset and handled the 90/10 class imbalance with weighted cross-entropy loss.",
       outcomes: [
-        "Reached 67.2% recall, flagging roughly two-thirds of hidden illicit flows.",
+        "Reported 67.2% recall and 51.0% precision on the project evaluation over the Elliptic dataset.",
         "Analyzed topology across more than 200,000 transaction nodes.",
         "Produced network, embedding, and feature-importance views for model interpretation.",
       ],
@@ -136,20 +166,20 @@ export const projects: Project[] = [
     title: "AI Document Assistant",
     trainerClass: "Ace Trainer",
     trainerName: "Sofia",
-    summary: "A production RAG system for grounded Q&A over documents with thousands of pages.",
-    highlight: "Hybrid retrieval with 35% lower latency",
+    summary: "A RAG application combining hybrid retrieval and reranking for grounded document Q&A.",
+    highlight: "Hybrid vector + keyword retrieval with cited context",
     caseStudy: {
       problem: "Large PDFs are difficult to search reliably, and naive vector retrieval often misses exact terms or returns weakly grounded answers.",
       approach: "Combined dense embeddings, BM25 search, cross-encoder reranking, semantic chunking, alias-aware query expansion, and cached embeddings.",
       outcomes: [
         "Supports grounded Q&A over individual PDFs exceeding 2,000 pages.",
-        "Reduced retrieval latency by 35% through embedding caching.",
+        "Added query expansion, context compression, and embedding caching to improve retrieval efficiency and relevance.",
         "Deployed with lazy model loading and secure secret management on Hugging Face Spaces.",
       ],
     },
     technologies: ["Python", "RAG", "Hugging Face", "Streamlit"],
     media: [
-      { type: "image", src: "/projects/ai_rag.png", alt: "AI document assistant interface", position: "left-top" },
+      { type: "image", src: "/projects/ai_rag.png", alt: "AI Document Assistant architecture diagram showing hybrid retrieval and answer generation", position: "center", fit: "cover" },
     ],
     liveUrl: "https://huggingface.co/spaces/SimonOcampoM/AIDocAssistant",
     githubUrl: "https://github.com/SimonOcampo/AIDocAssistant",

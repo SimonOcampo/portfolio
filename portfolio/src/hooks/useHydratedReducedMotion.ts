@@ -1,21 +1,19 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { useReducedMotion } from "framer-motion";
-
-const subscribe = () => () => undefined;
+const QUERY = "(prefers-reduced-motion: reduce)";
+const subscribe = (onChange: () => void) => {
+  const media = window.matchMedia(QUERY);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+};
+const getSnapshot = () => window.matchMedia(QUERY).matches;
+const getServerSnapshot = () => false;
 
 /**
  * Keeps SSR and the first client render identical, then applies the user's
  * reduced-motion preference immediately after hydration.
  */
 export function useHydratedReducedMotion() {
-  const prefersReducedMotion = useReducedMotion();
-  const hasHydrated = useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false
-  );
-
-  return hasHydrated && Boolean(prefersReducedMotion);
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

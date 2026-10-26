@@ -38,57 +38,19 @@ export interface Involvement {
 // 1. Education
 // ---------------------------------------------------------------------------
 
+export const skillGroups = [
+  { title: "Languages", skills: ["Python", "TypeScript", "JavaScript", "SQL", "Java", "C/C++"] },
+  { title: "Full-stack & Data", skills: ["React", "Next.js", "FastAPI", "Pydantic", "PostgreSQL", "Supabase", "REST APIs", "Tailwind CSS"] },
+  { title: "AI & ML", skills: ["PyTorch", "PyTorch Geometric", "Scikit-learn", "RAG", "LLM APIs (OpenAI, Gemini)", "Model evaluation", "Pandas", "ChromaDB", "BM25", "Azure AI Foundry"] },
+  { title: "Delivery & Testing", skills: ["Docker", "GitHub Actions", "Git", "Vitest", "Playwright", "Vercel", "Render"] },
+] as const;
+
 export const education: Education = {
   university: "University of Central Florida",
   degree: "B.S. in Computer Science",
   graduation: "May 2027",
-  gpa: 3.84,
-  skills: [
-    "Python",
-    "Java",
-    "C",
-    "C++",
-    "JavaScript",
-    "TypeScript",
-    "SQL",
-    "HTML/CSS",
-    "React",
-    "Next.js",
-    "FastAPI",
-    "Node.js",
-    "Express",
-    "Flask",
-    "PyTorch",
-    "PyTorch Geometric",
-    "Pandas",
-    "NumPy",
-    "matplotlib",
-    "Seaborn",
-    "Streamlit",
-    "TailwindCSS",
-    "Material UI",
-    "SQLAlchemy",
-    "Git/GitHub",
-    "Docker",
-    "PostgreSQL",
-    "Supabase",
-    "Redis",
-    "SQLite",
-    "AWS",
-    "Gemini API",
-    "OpenAI APIs",
-    "Hugging Face",
-    "Auth0",
-    "Apify",
-    "SerpApi",
-    "Yelp Fusion API",
-    "BeautifulSoup",
-    "REST APIs",
-    "GoHighLevel",
-    "Make",
-    "Odoo",
-    "PuLP",
-  ],
+  gpa: 3.82,
+  skills: skillGroups.flatMap((group) => [...group.skills]),
 };
 
 // ---------------------------------------------------------------------------
@@ -97,25 +59,25 @@ export const education: Education = {
 
 export const experience: Experience[] = [
   {
-    company: "Dexter",
-    title: "Junior AI Solutions Developer",
+    company: "Dexter Global Business Solutions",
+    title: "AI Solutions Developer",
     startDate: "June 2026",
     endDate: "Oct 2026",
     bullets: [
-      "Developed full-stack web applications using React and Supabase, cutting manual data entry by 45%.",
-      "Built secure asynchronous extraction pipelines with Edge Functions, reducing document latency by 60%.",
-      "Implemented PostgreSQL RLS and RBAC policies, securing multi-tenant data with 100% isolation.",
+      "Independently built ContractIQ, a React, TypeScript, and Supabase demo for contract intake, review, reporting, and approvals.",
+      "Secured PostgreSQL data with row-level security, four user roles, tenant isolation, and document-scoped permissions.",
+      "Engineered duplicate-safe uploads, transactional document versioning, and recoverable workflows with automated tests and CI.",
+      "Developed AI extraction and analysis with versioned prompts, source-citation checks, OCR support, human approvals, and 30-case synthetic evaluations.",
     ],
   },
   {
-    company: "UCF CECS",
-    title: "Teaching Assistant for Dr. Mahfuz Rahman",
+    company: "University of Central Florida",
+    title: "Teaching Assistant",
     startDate: "Aug 2025",
     endDate: "Aug 2026",
     bullets: [
-      "Guided 100+ students weekly in labs, reinforcing recursion, graph algorithms, and data structure implementation.",
-      "Debugged and explained complex Java programs during office hours, improving assignment completion and exam performance.",
-      "Graded 1000+ coding submissions for correctness, runtime optimization, and adherence to documentation standards.",
+      "Guided students in programming labs covering recursion, graph algorithms, and data structures.",
+      "Reviewed coding assignments for correctness and runtime efficiency, explaining improvements in accessible terms.",
     ],
   },
   {
@@ -141,15 +103,15 @@ export const experience: Experience[] = [
       "Supported community service by funding meals for 250 children through Vivint Gives Back",
     ],
   },
+
   {
     company: "Pactemos",
     title: "Software Engineer",
     startDate: "Dec 2024",
     endDate: "Jan 2025",
     bullets: [
-      "Automated legal compliance by building reusable contract templates with dynamic placeholders in Odoo ERP.",
-      "Standardized documentation workflows across 30+ branches, reducing processing delays and compliance errors.",
-      "Supported daily operations for 100+ staff by improving reliability of internal document and approval systems.",
+      "Built reusable contract templates with dynamic fields to simplify document preparation for legal operations teams.",
+      "Standardized documentation workflows and supported internal tools for document approval and coordination.",
     ],
   },
 ];

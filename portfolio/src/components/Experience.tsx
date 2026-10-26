@@ -48,8 +48,9 @@ export default function Experience() {
           02 / Experience
         </p>
         <h2 id="experience-heading" className="text-3xl font-black tracking-tight text-primary sm:text-4xl">
-          {sectionTitles.experience.title}
+          Engineering Experience
         </h2>
+        <p className="mt-2 font-mono text-xs text-slate-400">{sectionTitles.experience.title}</p>
       </motion.div>
 
       <div className="space-y-3 md:hidden">
@@ -69,7 +70,7 @@ export default function Experience() {
                   <span className={`block text-sm font-bold ${open ? "text-primary" : "text-slate-200"}`}>
                     {item.company}
                   </span>
-                  <span className="mt-1 block text-xs text-slate-500">{item.startDate} – {item.endDate}</span>
+                  <span className="mt-1 block text-xs text-slate-400">{item.startDate} – {item.endDate}</span>
                 </span>
                 <ChevronDown className={`shrink-0 transition-transform ${open ? "rotate-180 text-primary" : "text-slate-500"}`} size={19} />
               </button>
@@ -95,7 +96,7 @@ export default function Experience() {
       </div>
 
       <div className="hidden min-w-0 grid-cols-[13rem_minmax(0,1fr)] gap-10 md:grid lg:gap-14">
-        <div role="tablist" aria-label="Experience" className="flex flex-col border-l border-slate-700/80">
+        <div role="tablist" aria-label="Experience" aria-orientation="vertical" className="flex flex-col border-l border-slate-700/80">
           {experience.map((item, index) => {
             const active = index === selectedIndex;
             return (
@@ -105,8 +106,18 @@ export default function Experience() {
                 role="tab"
                 type="button"
                 aria-selected={active}
+                tabIndex={active ? 0 : -1}
                 aria-controls={`experience-panel-${index}`}
                 onClick={() => setSelectedIndex(index)}
+                onKeyDown={(event) => {
+                  const next = event.key === "ArrowDown" ? (index + 1) % experience.length
+                    : event.key === "ArrowUp" ? (index - 1 + experience.length) % experience.length
+                    : event.key === "Home" ? 0 : event.key === "End" ? experience.length - 1 : null;
+                  if (next === null) return;
+                  event.preventDefault();
+                  setSelectedIndex(next);
+                  event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("[role='tab']")[next]?.focus();
+                }}
                 className={`-ml-px min-h-12 border-l-2 px-4 py-3 text-left text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   active
                     ? "border-secondary bg-secondary/[0.07] text-secondary"

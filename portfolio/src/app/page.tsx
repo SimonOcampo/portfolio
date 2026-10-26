@@ -1,26 +1,32 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Hero from "@/components/Hero";
-import Experience from "@/components/Experience";
-import Projects from "@/components/Projects";
-import Education from "@/components/Education";
-import Involvement from "@/components/Involvement";
 import GraphBackground from "@/components/GraphBackground";
 import GymMap from "@/components/GymMap";
-import ChamberNav from "@/components/ChamberNav";
 import { CHAMBERS, getChamberIndex, type ChamberId } from "@/data/navigation";
 import { useHydratedReducedMotion } from "@/hooks/useHydratedReducedMotion";
 
+function SectionLoading() {
+  return <div role="status" className="mx-auto min-h-80 w-full max-w-7xl px-5 py-20 text-center text-sm text-slate-300">Loading section…</div>;
+}
+
+const PortfolioSection = dynamic(() => import("@/components/PortfolioSection"), { loading: SectionLoading });
+
 export default function Home() {
   const [chamber, setChamber] = useState(0);
+  const [homeEntrance, setHomeEntrance] = useState(true);
   const chamberPanelRef = useRef<HTMLDivElement>(null);
   const hasNavigated = useRef(false);
   const shouldReduceMotion = useHydratedReducedMotion();
 
   useEffect(() => {
-    const syncFromLocation = () => setChamber(getChamberIndex(window.location.hash));
+    const syncFromLocation = () => {
+      const index = getChamberIndex(window.location.hash);
+      setChamber(index);
+      if (index !== 0) setHomeEntrance(false);
+    };
     syncFromLocation();
     window.addEventListener("popstate", syncFromLocation);
     window.addEventListener("hashchange", syncFromLocation);
@@ -51,6 +57,7 @@ export default function Home() {
     const nextIndex = CHAMBERS.findIndex((item) => item.id === id);
     if (nextIndex < 0) return;
     setChamber(nextIndex);
+    if (nextIndex !== 0) setHomeEntrance(false);
     if (window.location.hash !== `#${id}`) {
       window.history.pushState(null, "", `#${id}`);
     }
@@ -66,18 +73,6 @@ export default function Home() {
     navigateTo(previous.id);
   };
 
-  const transition = shouldReduceMotion
-    ? { duration: 0 }
-    : { type: "tween" as const, duration: 0.34, ease: "easeOut" as const };
-
-  const variants = shouldReduceMotion
-    ? { initial: { opacity: 1 }, in: { opacity: 1 }, out: { opacity: 1 } }
-    : {
-        initial: { opacity: 0, x: 28 },
-        in: { opacity: 1, x: 0 },
-        out: { opacity: 0, x: -24 },
-      };
-
   return (
     <main className="portfolio-shell relative w-full overflow-hidden bg-background selection:bg-primary selection:text-background">
       <div aria-hidden className="fixed inset-0 z-0 bg-grid-pattern opacity-60" />
@@ -88,56 +83,24 @@ export default function Home() {
       </p>
 
       <div className="relative z-10 h-full w-full">
-        <AnimatePresence mode="wait">
-          <motion.div
+          <div
             key={CHAMBERS[chamber].id}
             ref={chamberPanelRef}
             data-chamber-scroll
             data-active="true"
             tabIndex={-1}
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={variants}
-            transition={transition}
-            className="absolute inset-0 h-full w-full overflow-y-auto overflow-x-clip pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-2 outline-none md:pb-16 md:pt-20"
+            className={`absolute inset-0 h-full w-full overflow-y-auto overflow-x-clip pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-2 outline-none md:pb-16 md:pt-20 ${chamber !== 0 ? "chamber-enter" : ""}`}
           >
-            {chamber === 0 && <Hero onNext={nextChamber} />}
+            {chamber === 0 && <Hero onNext={nextChamber} animateEntrance={homeEntrance} />}
 
-            {chamber === 1 && (
-              <div className="flex w-full min-w-0 flex-col items-center">
-                <Projects />
-                <ChamberNav
-                  onPrevious={previousChamber}
-                  onNext={nextChamber}
-                  nextLabel="Proceed to battle history"
-                />
-              </div>
+            {chamber !== 0 && (
+              <PortfolioSection
+                chamber={CHAMBERS[chamber].id as Exclude<ChamberId, "home">}
+                onPrevious={previousChamber}
+                onNext={nextChamber}
+              />
             )}
-
-            {chamber === 2 && (
-              <div className="flex w-full min-w-0 flex-col items-center">
-                <Experience />
-                <Involvement />
-                <ChamberNav
-                  onPrevious={previousChamber}
-                  onNext={nextChamber}
-                  nextLabel="Proceed to final stage"
-                />
-              </div>
-            )}
-
-            {chamber === 3 && (
-              <div className="flex w-full min-w-0 flex-col items-center">
-                <Education />
-                <ChamberNav
-                  onPrevious={previousChamber}
-                  previousLabel="Return to battle history"
-                />
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
+          </div>
       </div>
     </main>
   );

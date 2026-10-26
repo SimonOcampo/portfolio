@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { ChevronDown, Droplet, RotateCcw, Swords } from "lucide-react";
-import BattleScene from "@/components/BattleScene";
-import SelectionScreen from "@/components/SelectionScreen";
-import { education } from "@/data/resume";
+import { education, skillGroups } from "@/data/resume";
 import { sectionTitles } from "@/data/site";
 import { useHydratedReducedMotion } from "@/hooks/useHydratedReducedMotion";
 import {
@@ -16,30 +15,11 @@ import {
   type Trainer,
 } from "@/data/battle";
 
-type SkillCategory = "Languages" | "Frameworks" | "Tools";
+const BattleScene = dynamic(() => import("@/components/BattleScene"));
+const SelectionScreen = dynamic(() => import("@/components/SelectionScreen"));
 type BattleState = "restoring" | "idle" | "selecting" | "battling" | "defeated";
 
-const SKILL_CATEGORIES: Record<string, SkillCategory> = {
-  Python: "Languages", Java: "Languages", C: "Languages", "C++": "Languages",
-  JavaScript: "Languages", TypeScript: "Languages", SQL: "Languages", "HTML/CSS": "Languages",
-  React: "Frameworks", "Next.js": "Frameworks", FastAPI: "Frameworks", "Node.js": "Frameworks",
-  Express: "Frameworks", Flask: "Frameworks", PyTorch: "Frameworks", "PyTorch Geometric": "Frameworks",
-  Pandas: "Frameworks", NumPy: "Frameworks", matplotlib: "Frameworks", Seaborn: "Frameworks",
-  Streamlit: "Frameworks", TailwindCSS: "Frameworks", "Material UI": "Frameworks", SQLAlchemy: "Frameworks",
-  PuLP: "Frameworks", "Git/GitHub": "Tools", AWS: "Tools", Docker: "Tools", PostgreSQL: "Tools",
-  Supabase: "Tools", Redis: "Tools", SQLite: "Tools", "Gemini API": "Tools", "OpenAI APIs": "Tools", "Hugging Face": "Tools",
-  Auth0: "Tools", Apify: "Tools", SerpApi: "Tools", "Yelp Fusion API": "Tools", BeautifulSoup: "Tools",
-  "REST APIs": "Tools", GoHighLevel: "Tools", Make: "Tools", Odoo: "Tools",
-};
-
-const CATEGORY_ORDER: SkillCategory[] = ["Languages", "Frameworks", "Tools"];
-const DEFAULT_SKILLS_PER_CATEGORY = 8;
-
-function groupSkills(skills: string[]): Record<SkillCategory, string[]> {
-  const groups: Record<SkillCategory, string[]> = { Languages: [], Frameworks: [], Tools: [] };
-  skills.forEach((skill) => groups[SKILL_CATEGORIES[skill] ?? "Tools"].push(skill));
-  return groups;
-}
+const DEFAULT_SKILLS_PER_CATEGORY = 6;
 
 export default function Education() {
   const [battleState, setBattleState] = useState<BattleState>("restoring");
@@ -49,7 +29,6 @@ export default function Education() {
   const rewardRef = useRef<HTMLDivElement>(null);
   const challengeRef = useRef<HTMLButtonElement>(null);
   const shouldReduceMotion = useHydratedReducedMotion();
-  const skillsByCategory = useMemo(() => groupSkills(education.skills), []);
 
   useEffect(() => {
     let restored: ReturnType<typeof restoreBattleVictory> = null;
@@ -143,8 +122,9 @@ export default function Education() {
       )}
 
       <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8 sm:mb-12">
-        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.28em] text-secondary sm:text-xs">04 / Education + Skills</p>
-        <h2 id="education-heading" className="text-3xl font-black tracking-tight text-primary sm:text-4xl">{sectionTitles.education.title}</h2>
+        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.28em] text-sky-300 sm:text-xs">04 / Education + Skills</p>
+        <h2 id="education-heading" className="text-3xl font-black tracking-tight text-primary sm:text-4xl">Education & Skills</h2>
+        <p className="mt-2 font-mono text-xs text-slate-400">{sectionTitles.education.title}</p>
       </motion.div>
 
       <div className="grid min-w-0 grid-cols-1 gap-10 md:grid-cols-[0.78fr_1.22fr] md:gap-14">
@@ -168,8 +148,7 @@ export default function Education() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, x: 14 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="min-w-0 space-y-7">
-          {CATEGORY_ORDER.map((category) => {
-            const categorySkills = skillsByCategory[category];
+          {skillGroups.map(({ title: category, skills: categorySkills }) => {
             const visibleSkills = showAllSkills ? categorySkills : categorySkills.slice(0, DEFAULT_SKILLS_PER_CATEGORY);
             return (
               <div key={category}>

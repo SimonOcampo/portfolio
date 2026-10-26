@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { MotionConfig, motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowLeft, Swords } from "lucide-react";
 import FullscreenDialog from "@/components/FullscreenDialog";
@@ -29,7 +29,9 @@ export default function SelectionScreen({ onCancel, onStart }: SelectionScreenPr
   const canStart = Boolean(selectedTrainer && selectedPokemon);
 
   return (
+    <MotionConfig reducedMotion="never">
     <FullscreenDialog
+      expressiveMotion
       onClose={onCancel}
       labelledBy="selection-title"
       className="bg-[#02070d]"
@@ -43,7 +45,7 @@ export default function SelectionScreen({ onCancel, onStart }: SelectionScreenPr
       >
         <div className="w-full overflow-hidden rounded-2xl border border-primary/45 bg-[#07111d]/96 shadow-[0_0_44px_rgba(0,210,255,0.14)]">
           <header className="border-b border-white/10 px-4 py-4 text-center sm:px-8 sm:py-6">
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary/65">Final encounter setup</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary">Final encounter setup</p>
             <h2 id="selection-title" className="mt-1 text-xl font-black uppercase tracking-[0.1em] text-white sm:text-2xl">
               Choose your team
             </h2>
@@ -146,5 +148,6 @@ export default function SelectionScreen({ onCancel, onStart }: SelectionScreenPr
         </div>
       </motion.div>
     </FullscreenDialog>
+    </MotionConfig>
   );
 }

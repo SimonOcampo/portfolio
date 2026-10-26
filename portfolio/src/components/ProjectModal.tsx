@@ -1,23 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import Image, { getImageProps } from "next/image";
 import { motion } from "framer-motion";
 import { X, Github, ExternalLink, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import FullscreenDialog from "@/components/FullscreenDialog";
 import type { Project, ProjectMedia } from "@/data/projects";
 import { projectModal } from "@/data/site";
+import { useHydratedReducedMotion } from "@/hooks/useHydratedReducedMotion";
+
+const MEDIA_SIZES = "(max-width: 639px) calc(100vw - 16px), (max-width: 935px) calc(100vw - 40px), 896px";
 
 function MediaViewer({ media, title }: { media: ProjectMedia[]; title: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loadedIndex, setLoadedIndex] = useState<number | null>(null);
   const current = media[currentIndex];
   const showNav = media.length > 1;
+
+  useEffect(() => {
+    if (loadedIndex !== currentIndex || !showNav) return;
+    const next = media[(currentIndex + 1) % media.length];
+    if (next.type !== "image") return;
+    const { props } = getImageProps({ src: next.src, alt: next.alt, fill: true, sizes: MEDIA_SIZES, quality: 84, unoptimized: next.src.endsWith(".gif") });
+    const preload = new window.Image();
+    preload.sizes = props.sizes ?? MEDIA_SIZES;
+    preload.srcset = props.srcSet ?? "";
+    preload.src = props.src;
+  }, [currentIndex, loadedIndex, media, showNav]);
 
   return (
     <div className="relative overflow-hidden border-b border-white/10 bg-[#02070d]">
       <div className="relative flex h-60 items-center justify-center sm:h-[clamp(18rem,42dvh,24rem)]">
         {current.type === "video" ? (
-          <video controls preload="metadata" poster={current.poster} aria-label={current.alt} className="max-h-full max-w-full">
+          <video controls preload="none" poster={current.poster} aria-label={current.alt} className="max-h-full max-w-full">
             <source src={current.src} type="video/webm" />
           </video>
         ) : (
@@ -25,7 +40,9 @@ function MediaViewer({ media, title }: { media: ProjectMedia[]; title: string })
             src={current.src}
             alt={current.alt}
             fill
-            sizes="(max-width: 768px) 100vw, 896px"
+            sizes={MEDIA_SIZES}
+            loading="eager"
+            onLoad={() => setLoadedIndex(currentIndex)}
             quality={84}
             unoptimized={current.src.endsWith(".gif")}
             className={`object-contain ${current.position === "left-top" ? "object-left-top" : current.position === "top" ? "object-top" : "object-center"}`}
@@ -41,9 +58,11 @@ function MediaViewer({ media, title }: { media: ProjectMedia[]; title: string })
           <button type="button" onClick={() => setCurrentIndex((index) => (index + 1) % media.length)} className="absolute right-2 top-1/2 z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-black/65 text-white backdrop-blur transition-colors hover:bg-black/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Next media">
             <ChevronRight size={23} />
           </button>
-          <div className="absolute inset-x-0 bottom-3 z-20 flex justify-center gap-1.5" aria-label={`${title} media ${currentIndex + 1} of ${media.length}`}>
+          <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center" aria-label={`${title} media ${currentIndex + 1} of ${media.length}`}>
             {media.map((item, index) => (
-              <button key={item.src} type="button" onClick={() => setCurrentIndex(index)} aria-label={`Show media ${index + 1}`} aria-current={index === currentIndex ? "true" : undefined} className={`h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${index === currentIndex ? "w-6 bg-primary" : "w-2 bg-white/35 hover:bg-white/60"}`} />
+              <button key={item.src} type="button" onClick={() => setCurrentIndex(index)} aria-label={`Show media ${index + 1}`} aria-current={index === currentIndex ? "true" : undefined} className="grid size-11 place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                <span className={`h-2 rounded-full ${index === currentIndex ? "w-6 bg-primary" : "w-2 bg-white/60"}`} />
+              </button>
             ))}
           </div>
         </>
@@ -59,6 +78,7 @@ interface ProjectModalProps {
 
 export default function ProjectModal({ selectedProject, onClose }: ProjectModalProps) {
   const headingId = `project-${selectedProject.id}-title`;
+  const shouldReduceMotion = useHydratedReducedMotion();
 
   return (
     <FullscreenDialog
@@ -67,10 +87,10 @@ export default function ProjectModal({ selectedProject, onClose }: ProjectModalP
       contentClassName="flex h-full items-center justify-center p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[max(0.5rem,env(safe-area-inset-top))] sm:p-5"
     >
       <motion.article
-        initial={{ opacity: 0, scale: 0.975, y: 12 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.985, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.98, y: 8 }}
-        transition={{ duration: 0.2 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.18 }}
         className="relative max-h-full w-full max-w-4xl overflow-y-auto overscroll-contain rounded-2xl border border-white/12 bg-[#091a2e]/98 shadow-[0_24px_90px_rgba(0,0,0,0.7),0_0_40px_rgba(0,210,255,0.1)]"
       >
         <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 grid size-11 place-items-center rounded-full border border-white/10 bg-black/65 text-white/75 backdrop-blur transition-colors hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Close project case study">

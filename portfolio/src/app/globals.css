@@ -18,6 +18,35 @@ a {
   height: 100svh;
 }
 
+.chamber-enter { animation: chamber-enter 220ms ease-out both; }
+.hero-trainer-enter { animation: trainer-enter 450ms ease-out both; }
+.hero-partner-enter { animation: partner-enter 400ms 120ms ease-out both; }
+.hero-trainer-idle { animation: trainer-idle 3.2s ease-in-out infinite; }
+.hero-trainer-follow {
+  transform: translate3d(var(--trainer-x, 0px), var(--trainer-y, 0px), 0);
+  transition: transform 200ms ease-out;
+}
+
+@keyframes trainer-idle {
+  0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+  50% { transform: translateY(-7px) rotate(0.5deg); }
+}
+
+@keyframes chamber-enter {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes trainer-enter {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes partner-enter {
+  from { opacity: 0; transform: translateY(16px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 @supports (height: 100dvh) {
   .portfolio-shell {
     height: 100dvh;
@@ -145,6 +174,14 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *:not([data-expressive-motion], [data-expressive-motion] *),
+  *:not([data-expressive-motion], [data-expressive-motion] *)::before,
+  *:not([data-expressive-motion], [data-expressive-motion] *)::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   html:focus-within {
     scroll-behavior: auto;
   }

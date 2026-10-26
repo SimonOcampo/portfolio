@@ -5,16 +5,15 @@
 export const hero = {
   name: "Simon Ocampo Millan",
   eyebrow: "Gym Leader // Full-stack + AI systems",
-  subheadline: "Junior AI Solutions Developer @ Dexter · Computer Science @ UCF",
   ctaWork: "View Work",
   ctaResume: "Resume",
   ctaWorkHref: "#projects",
-  ctaResumeHref: "/Resume.pdf",
+  ctaResumeHref: "/resumes/Simon-Ocampo-Software-Engineering.pdf",
 } as const;
 
 export const metadata = {
   title: "Neural Water Gym | Simon Ocampo Millan | Portfolio",
-  description: "Junior AI Solutions Developer @ Dexter · Computer Science @ UCF",
+  description: "Simon Ocampo Millan builds full-stack applications and applied AI systems. Explore projects, engineering experience, and software and AI résumés.",
 } as const;
 
 export const sectionTitles = {
